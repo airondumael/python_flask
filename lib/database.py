@@ -21,18 +21,19 @@ def get(_connection, _query, _params):
     for row in data:
         result.append(dict(row) or row)
 
+    _connection.close()
     return result
 
 
 # Executes raw query
 def query(_connection, _query, _params):
-    
+    res = {}
     data = _connection.execute(text(_query), _params)
     _connection.commit()
 
-    print data
+    res['rows_affected'] = data.rowcount
+    _connection.close()
 
-
-    return data
+    return res
 
 

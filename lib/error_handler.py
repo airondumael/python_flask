@@ -1,4 +1,4 @@
-from flask import Blueprint, make_response, jsonify
+from flask import Blueprint, make_response, jsonify, json
 
 
 class FailedRequest(Exception):
@@ -30,6 +30,10 @@ def not_found(error):
 @mod_err.app_errorhandler(500)
 def not_found(error):
     return make_response(jsonify({'HTTP 500': 'The Monkey Ninja failed internally'}), 500)
+
+@mod_err.app_errorhandler(Exception)
+def exception_encountered(error):
+    return make_response(jsonify({'error':error.message}), 500)
 
 @mod_err.app_errorhandler(FailedRequest)
 def exception_encountered(error):

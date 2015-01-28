@@ -18,6 +18,7 @@ app.register_blueprint(mod_err)
 
 
 # Database connections declaration
+# TODO: Generalize adding of db engines
 earnings_db = database.make_engine(app.config['MYSQL_EARNINGS'])
 
 @app.teardown_appcontext
@@ -25,7 +26,7 @@ def shutdown_session(exception=None):
     """Remove the local session after executing the request."""
     earnings_db.remove()
 
-
+# ===================END DB======================== #
 
 # Import blueprints here
 from app.auth.dispatch import mod_auth as auth_module

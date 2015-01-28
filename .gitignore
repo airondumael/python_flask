@@ -1,1 +1,13 @@
-venv/
+*.pyc
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
+
+venv
+
+trash
+sblm.sublime-workspace
