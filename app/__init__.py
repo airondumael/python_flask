@@ -2,8 +2,9 @@
 from flask import Flask, jsonify
 
 # Import core libraries here
-from lib import database
+from lib import database_connection
 from lib.error_handler import mod_err
+from lib.database_connection import mod_db_connection
 
 # App declaration
 app = Flask(__name__, instance_relative_config = True)
@@ -16,17 +17,10 @@ app.config.from_pyfile('env/development.py')
 # Error and exception handling
 app.register_blueprint(mod_err)
 
+# DB connection
+app.register_blueprint(mod_db_connection)
 
-# Database connections declaration
-# TODO: Generalize adding of db engines
-earnings_db = database.make_engine(app.config['MYSQL_EARNINGS'])
-
-@app.teardown_appcontext
-def shutdown_session(exception=None):
-    """Remove the local session after executing the request."""
-    earnings_db.remove()
-
-# ===================END DB======================== #
+app.db = database_connection.get_database()
 
 # Import blueprints here
 from app.auth.dispatch import mod_auth as auth_module

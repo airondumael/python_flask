@@ -13,21 +13,22 @@ from lib import res
 from lib.error_handler import FailedRequest
 
 
+config = app.config
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 mod_auth = Blueprint('auth', __name__)
 
 # Set the route and accepted methods
 
-# @mod_auth.route('/', methods=['GET', 'POST'])
+# @mod_auth.route('/<query>', methods=['GET', 'POST'])
 # def signin(query):
 #     return res.send(auth.get_access_token(query))
 
 
 @mod_auth.route('/', methods=['GET'])
 def get_freedom_auth_url():
-    return (app.config['FACCOUNTS_URL'] + '/auth' + '?'
-        + utils.encode_params(app.config['FACCOUNTS_PARAMS']) + '&state=admin')
+    return (config['FACCOUNTS_URL'] + '/auth' + '?'
+        + utils.encode_params(config['FACCOUNTS_PARAMS']) + '&state=admin')
 
 
 # Route for auth callback
@@ -38,7 +39,7 @@ def freedom_callback():
     headers = {'Access-Token' : data['access_token']}
 
     try:
-        response = requests.get(app.config['FACCOUNTS_URL'] + '/user/', headers=headers)
+        response = requests.get(config['FACCOUNTS_URL'] + '/user/', headers=headers)
 
         data['user'] = response.text
 
