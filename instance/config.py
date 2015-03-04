@@ -22,4 +22,7 @@ CSRF_SESSION_KEY = "46100057d51c1023677cce73d3ee652a"
 # Secret key for signing cookies
 SECRET_KEY = "3c135fcaca9a1f1108132c9453f547cb"
 
+# Freedom Accounts URL
+FACCOUNTS_URL = 'http://api.accounts.freedom.tm:80'
+
 print " * Loading config for " + APP_NAME

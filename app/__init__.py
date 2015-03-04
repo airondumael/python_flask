@@ -1,7 +1,7 @@
 # Import flask
 from flask import Flask, jsonify
 
-# Import core libraries here 
+# Import core libraries here
 from lib import database
 from lib.error_handler import mod_err
 
@@ -33,4 +33,3 @@ from app.auth.dispatch import mod_auth as auth_module
 
 # Register imported blueprints for modules
 app.register_blueprint(auth_module, url_prefix='/auth')
-
