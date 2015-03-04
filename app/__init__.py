@@ -1,5 +1,5 @@
 # Import flask
-from flask import Flask, jsonify
+from flask import Flask
 
 # Import core libraries here
 from lib import database_connection

@@ -8,15 +8,25 @@ MONGO_CONNECT_TIMEOUT_MS    = 10000
 
 
 # MySQL Config
-# For multiple mysql connections, use object for each config, 
+# For multiple mysql connections, use object for each config,
 # the db driver will read and parse it as needed
 
 MYSQL_EARNINGS = {
     'host'        : 'localhost',
     'db'          : 'earnings_report',
     'user'        : 'root',
-    'password'    : '',    
-    'port'        : 3306    
+    'password'    : '',
+    'port'        : 3306
+}
+
+
+
+MYSQL_MUSIC = {
+    'host'      : 'localhost',
+    'db'        : 'music_tm',
+    'user'      : 'root',
+    'password'  : '',
+    'port'      : 3306
 }
 
 

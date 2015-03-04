@@ -25,6 +25,8 @@ db = Database()
 # Database connections declaration
 db.earnings_db = db.add_engine(development.MYSQL_EARNINGS)
 
+db.music_db = db.add_engine(development.MYSQL_MUSIC)
+
 @mod_db_connection.teardown_app_request
 def shutdown_session(exception=None):
     """Remove the local session after executing the request."""

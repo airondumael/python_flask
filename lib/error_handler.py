@@ -1,4 +1,4 @@
-from flask import Blueprint, make_response, jsonify, json
+from flask import Blueprint, make_response, jsonify
 
 
 class FailedRequest(Exception):
