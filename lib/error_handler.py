@@ -31,11 +31,10 @@ def not_found(error):
 def not_found(error):
     return make_response(jsonify({'HTTP 500': 'The Monkey Ninja failed internally'}), 500)
 
-@mod_err.app_errorhandler(Exception)
-def exception_encountered(error):
-    return make_response(jsonify({'error':error.message}), 500)
-
 @mod_err.app_errorhandler(FailedRequest)
 def exception_encountered(error):
     return make_response(jsonify(error.to_dict()), error.status_code)
 
+@mod_err.app_errorhandler(Exception)
+def exception_encountered(error):
+    return make_response(jsonify({'error': error.message}), 500)

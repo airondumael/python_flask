@@ -48,26 +48,22 @@ def freedom_callback():
             'insert into users(`user_id`, `email`) values(:user_id, :email)', params)
 
 
-
-    data = {}
-    data['access_token'] = request.args.get('access_token')
-    headers = {'Access-Token' : data['access_token']}
+    access_token = request.args.get('access_token')
+    headers = {'Access-Token' : access_token}
 
     try:
         response = requests.get(config['FACCOUNTS_URL'] + '/user/', headers=headers)
 
-        data['user'] = response.text
+        data = json.loads(response.text)
 
-        if not data:
-            raise FailedRequest('Invalid Access Token')
+        if 'message' in data:
+            raise FailedRequest(data['message'])
 
 
-        user = json.loads(data['user'])
-
-        if not user_exists(user):
+        if not user_exists(data):
             params = {
                 'user_id'   : utils.generate_UUID(),
-                'email'     : user['email']
+                'email'     : data['email']
             }
 
             add_user(params)
@@ -75,5 +71,5 @@ def freedom_callback():
 
         return redirect('/')
 
-    except Exception, e:
-        raise FailedRequest(e)
+    except FailedRequest, e:
+        raise e
