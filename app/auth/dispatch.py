@@ -1,7 +1,7 @@
 import requests
 # Import root functions/objects
 # Import global context
-from app import app, auth
+from app import app, user
 from util import utils
 
 # Import flask dependencies
@@ -18,12 +18,6 @@ config = app.config
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 mod_auth = Blueprint('auth', __name__)
 
-# Set the route and accepted methods
-
-# @mod_auth.route('/<query>', methods=['GET', 'POST'])
-# def signin(query):
-#     return res.send(auth.get_access_token(query))
-
 
 @mod_auth.route('/', methods=['GET'])
 def get_freedom_auth_url():
@@ -37,25 +31,21 @@ def freedom_callback():
     access_token = request.args.get('access_token')
     headers = {'Access-Token' : access_token}
 
-    try:
-        response = requests.get(config['FACCOUNTS_URL'] + '/user/', headers=headers)
+    response = requests.get(config['FACCOUNTS_URL'] + '/user/', headers=headers)
 
-        data = json.loads(response.text)
-
-        if 'message' in data:
-            raise FailedRequest(data['message'])
+    if response.status_code != 200:
+        raise FailedRequest(response.text)
 
 
-        if not auth.user_exists(data):
-            params = {
-                'user_id'   : utils.generate_UUID(),
-                'email'     : data['email']
-            }
+    data = json.loads(response.text)
+    params = {
+        'user_id'   : utils.generate_UUID(),
+        'email'     : data['email']
+    }
 
-            auth.add_user(params)
+    if not user.user_exists(params):
+        user.add_user(params)
 
 
-        return redirect('/')
+    return redirect('/')
 
-    except FailedRequest, e:
-        raise e
