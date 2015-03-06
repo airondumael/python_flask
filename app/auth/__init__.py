@@ -29,3 +29,17 @@ def get_access_token (_data):
 def check_login (_data):
     if 'username' in _data and 'password' in _data:
         return True
+
+
+def add_user(_params):
+        data = database.query(db.music_db,
+            'insert into users(`user_id`, `email`) values(:user_id, :email)', _params)
+
+        return data
+
+
+def user_exists(_user):
+        data = database.get(db.music_db,
+            'select user_id from users where email = "' + _user['email'] + '"', None)
+
+        return data

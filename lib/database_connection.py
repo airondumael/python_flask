@@ -17,6 +17,7 @@ class Database():
         self.engines.append(engine)
         return engine
 
+
 # Blueprint declaration
 mod_db_connection = Blueprint('mod_db_connection', __name__)
 

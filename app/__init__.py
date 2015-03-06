@@ -6,6 +6,7 @@ from lib import database_connection
 from lib.error_handler import mod_err
 from lib.database_connection import mod_db_connection
 
+
 # App declaration
 app = Flask(__name__, instance_relative_config = True)
 
