@@ -4,6 +4,18 @@ from lib import database
 
 db = app.db
 
+def add_roles(_params):
+    data = database.query(db.music_db, 'insert into user_roles values(:user_id, :role)', _params)
+
+    return data
+
+
+def add_scopes(_params):
+    data = database.query(db.music_db, 'insert into user_scopes values(:user_id, :scope)', _params)
+
+    return data
+
+
 def add_user(_params):
     data = database.query(db.music_db,
         'insert into users(`user_id`, `email`) values(:user_id, :email)', _params)
@@ -16,10 +28,15 @@ def user_exists(_params):
 
     return data
 
-# def update():
-#     params = {
-#         'email'     : 'new@gmail.com',
-#         'old_email' : 'sibayanjasper@gmail.com'
-#     }
-#     database.query(db.music_db, 'update users set email = :email where email = :old_email', params)
+
+# def update_user(_params):
+#     data = database.query(db.music_db, 'update users set email = :email where email = :old_email', _params)
+
+#     return data
+
+
+# def delete_user(_params):
+#     data = database.query(db.music_db, 'delete from users where email = :email', _params)
+
+#     return data
 

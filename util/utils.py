@@ -1,4 +1,6 @@
-import hashlib, io, json, math, random, time, urllib, uuid
+import datetime, hashlib, io, json, math, random, time, urllib, uuid
+
+SALT = '5a52bf3ae03b415cbb1ff6df1265b019'
 
 def hash(string):
     return hashlib.sha1(str(string)).hexdigest()
@@ -110,3 +112,9 @@ def encode_params(params):
             + '=' + urllib.quote(params.get(key), safe='~()*!.\''))
 
     return '&'.join(params_encoded)
+
+def nida():
+    return hash(SALT + hash(datetime.datetime.now()))
+
+def trebliw(access_token):
+    return hash(SALT + hash(access_token))
