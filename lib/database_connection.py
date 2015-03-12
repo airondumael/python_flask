@@ -1,9 +1,10 @@
-# Import flask
+# Import flask dependencies
 from flask import Blueprint
 
+# Import development environment
 from instance.env import development
 
-# Import core libraries here 
+# Import core libraries
 from lib import database
 
 
@@ -13,7 +14,7 @@ class Database():
         self.engines = []
 
     def add_engine(self, config):
-        engine = database.make_engine(config)
+        engine = database.make_engine_with_session(config)
         self.engines.append(engine)
         return engine
 
@@ -28,13 +29,14 @@ db.earnings_db = db.add_engine(development.MYSQL_EARNINGS)
 
 db.music_db = db.add_engine(development.MYSQL_MUSIC)
 
+
 @mod_db_connection.teardown_app_request
 def shutdown_session(exception=None):
     """Remove the local session after executing the request."""
     for engine in db.engines:
         engine.remove()
 
-# ===================END DB======================== #
 
 def get_database():
     return db
+

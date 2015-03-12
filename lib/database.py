@@ -1,16 +1,26 @@
+# Import global context
 from sqlalchemy     import create_engine
 from sqlalchemy.sql import text
 from sqlalchemy.orm import sessionmaker, scoped_session
+
 
 def sql_alchemy_format(_config):
     return 'mysql://' + _config['user'] + ':' + _config['password'] + '@' + \
         _config['host'] + ':' + str(_config['port']) + '/' + _config['db']
 
-# Creates an engine with session based scoping
+
+# Creates an engine
 def make_engine(_config):
+    en = create_engine(sql_alchemy_format(_config))
+    return en.connect()
+
+
+# Creates an engine with session based scoping
+def make_engine_with_session(_config):
     en      = create_engine(sql_alchemy_format(_config))
     Session = sessionmaker(bind = en)
     return scoped_session(Session)
+
 
 # Executes db get
 def get(_connection, _query, _params):
@@ -35,5 +45,4 @@ def query(_connection, _query, _params):
     _connection.close()
 
     return res
-
 

@@ -116,5 +116,5 @@ def encode_params(params):
 def nida():
     return hash(SALT + hash(datetime.datetime.now()))
 
-def trebliw(access_token):
+def mida(access_token):
     return hash(SALT + hash(access_token))

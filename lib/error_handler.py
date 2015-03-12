@@ -1,4 +1,8 @@
-from flask import Blueprint, make_response, jsonify
+# Import global context
+from flask import jsonify, make_response
+
+# Import flask dependencies
+from flask import Blueprint
 
 
 class FailedRequest(Exception):
@@ -11,6 +15,7 @@ class FailedRequest(Exception):
             self.status_code = status_code
         self.payload = payload
 
+
     def to_dict(self):
         rv = {}
         rv['message'] = self.message
@@ -21,7 +26,8 @@ class FailedRequest(Exception):
 # Blueprint declaration
 mod_err = Blueprint('mod_err', __name__)
 
-# Declare necessary error handlers here
+
+# Declare necessary error handlers
 
 @mod_err.app_errorhandler(404)
 def not_found(error):
