@@ -5,7 +5,7 @@ from flask import request
 from flask import Blueprint
 
 # Import app-based dependencies
-from app import app, user
+from app import app, auth, user
 from util import utils
 
 # Import core libraries
@@ -57,9 +57,24 @@ def freedom_callback(res):
         user.add_user(params)
         user.add_roles(params)
         user.add_scopes(params)
-        user.add_session(params)
+
+    auth.add_session(params)
 
     res.set_header('mida', params['mida'])
+
+    return res.redirect('/')
+
+
+# Route for auth logout
+@mod_auth.route('/logout', methods=['POST'])
+@check_tokens
+@make_response
+def logout(res):
+    params = {
+        'user_id' : request.user_id
+    }
+
+    auth.remove_session(params)
 
     return res.redirect('/')
 

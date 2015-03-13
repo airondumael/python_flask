@@ -18,12 +18,6 @@ def add_scopes(_params):
     return data
 
 
-def add_session(_params):
-    data = database.query(db.music_db, 'insert into session values(:user_id, :mida)', _params)
-
-    return data
-
-
 def add_user(_params):
     data = database.query(db.music_db,
         'insert into users(`user_id`, `email`) values(:user_id, :email)', _params)
