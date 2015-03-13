@@ -2,7 +2,7 @@
 from flask import Flask
 
 # Import core libraries
-from lib import database_connection, res
+from lib import database_connection
 from lib.error_handler import mod_err
 from lib.database_connection import mod_db_connection
 
