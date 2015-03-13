@@ -60,6 +60,7 @@ def make_response(func):
     def wrapper(*args, **kw):
         response = Response()
         response.set_header('nida', utils.nida())
+        response.set_header('Access-Control-Allow-Origin', '*')
 
         return func(res = response, *args, **kw)
 
