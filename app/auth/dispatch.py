@@ -27,7 +27,7 @@ mod_auth = Blueprint('auth', __name__)
 @mod_auth.route('/', methods=['GET'])
 @make_response
 def get_freedom_auth_url(res):
-    return (config['FACCOUNTS_URL'] + '/auth' + '?'
+    return res.send(config['FACCOUNTS_URL'] + '/auth' + '?'
         + utils.encode_params(config['FACCOUNTS_PARAMS']) + '&state=admin')
 
 
