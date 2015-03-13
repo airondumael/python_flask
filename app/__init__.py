@@ -25,7 +25,7 @@ app.db = database_connection.get_database()
 
 # Import blueprints
 from app.auth.dispatch import mod_auth as auth_module
-from app.track.dispatch import mod_track as track_module
+# from app.track.dispatch import mod_track as track_module
 
 # Register imported blueprints for modules
 app.register_blueprint(auth_module, url_prefix='/auth')
