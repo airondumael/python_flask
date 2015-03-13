@@ -36,7 +36,9 @@ def get_freedom_auth_url():
 @make_response
 def freedom_callback(res):
     access_token = request.args.get('access_token')
-    headers = {'Access-Token' : access_token}
+    headers = {
+        'Access-Token' : access_token
+    }
 
     response = curl.get(config['FACCOUNTS_URL'] + '/user/', headers=headers)
 
@@ -70,6 +72,12 @@ def freedom_callback(res):
 @check_tokens
 @make_response
 def logout(res):
+    headers = {
+        'Access-Token' : request.access_token
+    }
+
+    response = curl.post(config['FACCOUNTS_URL'] + '/auth/logout', headers=headers)
+
     params = {
         'user_id' : request.user_id
     }
