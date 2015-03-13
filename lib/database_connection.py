@@ -25,8 +25,6 @@ mod_db_connection = Blueprint('mod_db_connection', __name__)
 db = Database()
 
 # Database connections declaration
-db.earnings_db = db.add_engine(development.MYSQL_EARNINGS)
-
 db.music_db = db.add_engine(development.MYSQL_MUSIC)
 
 
