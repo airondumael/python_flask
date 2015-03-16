@@ -27,8 +27,8 @@ mod_auth = Blueprint('auth', __name__)
 @mod_auth.route('/', methods=['GET'])
 @make_response
 def get_freedom_auth_url(res):
-    return res.send(config['FACCOUNTS_URL'] + '/auth' + '?'
-        + utils.encode_params(config['FACCOUNTS_PARAMS']) + '&state=admin')
+    return res.send(config['FACCOUNTS_URL'] + '/auth' + '?' +
+        utils.encode_params(config['FACCOUNTS_PARAMS']) + '&state=admin')
 
 
 # Route for auth callback
@@ -56,7 +56,12 @@ def freedom_callback(res):
         'mida'      : utils.mida(access_token)
     }
 
-    if not user.user_exists(params):
+    user_data = user.user_exists(params)
+
+    if user_data:
+        params['user_id'] = user_data[0]['user_id']
+
+    else:
         user.add_user(params)
         user.add_roles(params)
         user.add_scopes(params)
@@ -74,7 +79,7 @@ def freedom_callback(res):
 @make_response
 def logout(res):
     headers = {
-        'Access-Token' : request.access_token
+        'Access-Token' : request.headers.get('access_token')
     }
 
     response = curl.post(config['FACCOUNTS_URL'] + '/auth/logout', headers=headers)

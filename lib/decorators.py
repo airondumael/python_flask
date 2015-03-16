@@ -1,5 +1,5 @@
 # Import global context
-from flask import request, redirect
+from flask import redirect, request
 
 # Import development environment
 from instance.env import development
@@ -36,7 +36,7 @@ def check_tokens(func):
                 'mida' : mida
             }
 
-            data = database.get(db, 'select * from session where mida = :mida', params)
+            data = database.get(db, 'SELECT * FROM session WHERE mida = :mida', params)
 
             if data and utils.mida(access_token) == mida:
                 request.user_id = data[0]['user_id']
