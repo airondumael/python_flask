@@ -1,32 +1,42 @@
-# Import root functions/objects
 # Import global context
-from app import track
-from flask import config, request, session, g
+from flask import request
 
 # Import flask dependencies
-from flask import Blueprint, redirect, url_for, make_response
-from lib.error_handler import FailedRequest
+from flask import Blueprint
+
+# Import app-based dependencies
+from app import track
+
+# Import core libraries
+from lib.decorators import check_tokens, make_response
+
+# Other imports
+from werkzeug import secure_filename
 
 
-
-# Define the blueprint: 'auth', set its url prefix: app.url/auth
-mod_tracks = Blueprint('track', __name__)
-
-# Set the route and accepted methods
-
-# @mod_auth.route('/genre', methods=['GET'])
-# def get_genre(query):
-#     return res.send(auth.get_access_token(query))
+# Define the blueprint: 'track', set its url prefix: app.url/track
+mod_track = Blueprint('track', __name__)
 
 
+# Declare all the routes
 
+@mod_track.route('/upload', methods=['POST'])
+@check_tokens
+@make_response
+def upload(res):
+    file = request.files['file']
+    
+    if file and track.allowed_file(file.filename):
+        filename = secure_filename(file.filename)
 
-# @mod_auth.route('/artist', methods=['GET'])
-# def get_artist(query):
-#     return res.send(auth.get_access_token(query))
+        params = {
+            'file'      : file,
+            'filename'  : filename
+        }
 
+        track.upload_track(params)
 
+        return res.send('upload success')
 
-# @mod_auth.route('/album', methods=['GET'])
-# def get_album(query):
-#     return res.send(auth.get_access_token(query))
+    return res.send('upload failed')
+
