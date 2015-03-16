@@ -9,7 +9,7 @@ from app import app, auth, user
 from util import utils
 
 # Import core libraries
-from lib.decorators import make_response, check_tokens
+from lib.decorators import check_tokens, make_response
 from lib.error_handler import FailedRequest
 
 # Other imports
