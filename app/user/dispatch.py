@@ -42,3 +42,14 @@ def edit_user(res):
 
     return res.send('edit success')
 
+
+@mod_user.route('/scope', methods=['GET'])
+@check_tokens
+@make_response
+def get_scopes(res):
+    params = {
+        'user_id' : request.user_id
+    }
+
+    return res.send(user.get_scopes(params))
+

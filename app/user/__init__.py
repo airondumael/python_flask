@@ -42,3 +42,10 @@ def user_exists(_params):
 
     return data
 
+
+def get_scopes(_params):
+    data = database.get(db.music_db, 'SELECT scope FROM scopes WHERE roles LIKE \
+        CONCAT(CONCAT("%", (SELECT role FROM user_roles WHERE user_id = :user_id)), "%");', _params)
+
+    return data
+

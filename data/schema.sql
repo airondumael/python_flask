@@ -36,6 +36,14 @@ CREATE TABLE `session` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+CREATE TABLE `scopes` (
+    `scope` varchar(20) COLLATE utf8_unicode_ci,
+    `description` varchar(200) COLLATE utf8_unicode_ci,
+    `roles` varchar(50) COLLATE utf8_unicode_ci,
+    PRIMARY KEY (`scope`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
 -- CREATE TABLE `users_access_token` (
 --     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
 --     `access_token` varchar(37) COLLATE utf8_unicode_ci DEFAULT NULL,
