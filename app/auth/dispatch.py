@@ -70,7 +70,7 @@ def freedom_callback(res):
 
     res.set_header('mida', params['mida'])
 
-    return res.redirect('/')
+    return res.redirect(frontend_url='/')
 
 
 # Route for auth logout
@@ -90,5 +90,5 @@ def logout(res):
 
     auth.remove_session(params)
 
-    return res.redirect('/')
+    return res.redirect(frontend_url='/')
 

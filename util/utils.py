@@ -6,6 +6,7 @@ from lib import database
 
 import datetime, hashlib, io, json, math, random, time, urllib, uuid
 
+
 SALT = '5a52bf3ae03b415cbb1ff6df1265b019'
 
 def hash(string):
@@ -134,7 +135,5 @@ def has_scopes(mida, scope):
     }
 
     data = database.get(db, 'SELECT * FROM user_scopes WHERE mida = :mida AND scope = :scope', params)
-
-    db.remove()
 
     return data

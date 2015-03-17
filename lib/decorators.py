@@ -21,7 +21,7 @@ def check_tokens(func):
         response = Response()
         response.set_header('nida', utils.nida())
 
-        return response.redirect('/', 'Session expired')
+        return response.redirect(frontend_error_url='/', data='Session expired')
 
 
     @wraps(func)
@@ -37,8 +37,6 @@ def check_tokens(func):
             }
 
             data = database.get(db, 'SELECT * FROM session WHERE mida = :mida', params)
-
-            db.remove()
 
             if data and utils.mida(access_token) == mida:
                 request.user_id = data[0]['user_id']

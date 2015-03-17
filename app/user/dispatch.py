@@ -30,7 +30,8 @@ def get_user(res):
         return res.send(user.get_user(params)[0])
 
     else:
-        return res.send('You do not have permission to do this action')
+        return res.redirect(frontend_error_url='/',
+            data='You do not have permission to do this action')
 
 
 @mod_user.route('/', methods=['POST'])

@@ -26,14 +26,17 @@ class Response():
         return response
 
 
-    def redirect(self, url, data=None):
-        if data:
-            response = make_response(redirect(url, data))
+    def redirect(self, frontend_url=None, frontend_error_url=None, data=None):
+        if frontend_url:
+            response = make_response(redirect(frontend_url))
+
         else:
-            response = make_response(redirect(url))
+            response = make_response(redirect(frontend_error_url))
 
         for key in self.headers:
             response.headers.add(key, self.headers[key])
+
+        response.data = data
 
         return response
 

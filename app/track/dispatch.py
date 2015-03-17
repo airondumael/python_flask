@@ -36,7 +36,7 @@ def upload(res):
 
         track.upload_track(params)
 
-        return res.send('upload success')
+        return res.send('Upload success')
 
-    return res.send('upload failed')
+    return res.redirect(frontend_error_url='/', data='Upload failed')
 
