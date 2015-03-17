@@ -14,7 +14,10 @@ def add_roles(_params):
 
 
 def add_scopes(_params):
-    data = database.query(db.music_db, 'INSERT INTO user_scopes VALUES(:user_id, :scope)', _params)
+    scopes = _params['scopes']
+
+    for scope in scopes:
+        data = database.query(db.music_db, 'INSERT INTO user_scopes VALUES(:user_id, :mida, \'' + scope + '\')', _params)
 
     return data
 

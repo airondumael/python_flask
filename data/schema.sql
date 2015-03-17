@@ -24,15 +24,14 @@ CREATE TABLE `user_roles` (
 
 CREATE TABLE `user_scopes` (
     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
-    `scope` varchar(200) COLLATE utf8_unicode_ci DEFAULT 'user.info,music.list',
-    PRIMARY KEY (`user_id`)
+    `mida` varchar(50) COLLATE utf8_unicode_ci,
+    `scope` varchar(200) COLLATE utf8_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 CREATE TABLE `session` (
     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
-    `mida` varchar(50) COLLATE utf8_unicode_ci,
-    PRIMARY KEY (`user_id`)
+    `mida` varchar(50) COLLATE utf8_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 

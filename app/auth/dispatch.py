@@ -52,7 +52,7 @@ def freedom_callback(res):
         'user_id'   : utils.generate_UUID(),
         'email'     : data['email'],
         'role'      : 'all',
-        'scope'     : 'user.info,music.list',
+        'scopes'     : ['user.info', 'music.list'],
         'mida'      : utils.mida(access_token)
     }
 

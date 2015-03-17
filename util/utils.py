@@ -1,3 +1,9 @@
+# Import development environment
+from instance.env import development
+
+# Import core libraries
+from lib import database
+
 import datetime, hashlib, io, json, math, random, time, urllib, uuid
 
 SALT = '5a52bf3ae03b415cbb1ff6df1265b019'
@@ -118,3 +124,17 @@ def nida():
 
 def mida(access_token):
     return hash(SALT + hash(access_token))
+
+def has_scopes(mida, scope):
+    db = database.make_engine(development.MYSQL_MUSIC)
+
+    params = {
+        'mida'  : mida,
+        'scope' : scope
+    }
+
+    data = database.get(db, 'SELECT * FROM user_scopes WHERE mida = :mida AND scope = :scope', params)
+
+    db.remove()
+
+    return data
