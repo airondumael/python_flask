@@ -25,4 +25,7 @@ SECRET_KEY = "3c135fcaca9a1f1108132c9453f547cb"
 # Freedom Accounts URL
 FACCOUNTS_URL = 'http://api.accounts.freedom.tm:80'
 
+# Music Frontend Freedom Callback URL
+FRONTEND_URL_CALLBACK = 'http://dev.music.freedom.tm:8000/#/login/callback'
+
 print " * Loading config for " + APP_NAME
