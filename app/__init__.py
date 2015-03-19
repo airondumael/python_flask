@@ -17,6 +17,8 @@ app = Flask(__name__, instance_relative_config = True)
 app.config.from_pyfile('config.py')
 app.config.from_pyfile('env/development.py')
 
+CORS(app, allow_headers=app.config['ALLOWED_HEADERS'], origins=app.config['ORIGIN'], methods=app.config['METHODS'])
+
 CORS(app, allow_headers=app.config['ALLOWED_HEADERS'],
     origins=app.config['ALLOWED_ORIGINS'], methods=app.config['ALLOWED_METHODS'])
 
