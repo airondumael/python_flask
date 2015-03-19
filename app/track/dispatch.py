@@ -38,5 +38,5 @@ def upload(res):
 
         return res.send('Upload success')
 
-    return res.redirect(frontend_error_url='/', data='Upload failed')
+    return res.redirect(frontend_error_url='/', params={'error' : 'Upload failed'})
 

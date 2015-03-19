@@ -1,5 +1,5 @@
-# Import development environment
-from instance.env import development
+# Import global context
+from flask import current_app as app
 
 # Import core libraries
 from lib import database
@@ -127,7 +127,7 @@ def mida(access_token):
     return hash(SALT + hash(access_token))
 
 def has_scopes(mida, scope):
-    db = database.make_engine(development.MYSQL_MUSIC)
+    db = database.make_engine(config['MYSQL_MUSIC'])
 
     params = {
         'mida'  : mida,

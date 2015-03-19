@@ -64,13 +64,11 @@ def freedom_callback(res):
     else:
         user.add_user(params)
         user.add_roles(params)
-        user.add_scopes(params)
-
+    
+    auth.add_scopes(params)
     auth.add_session(params)
 
-    res.set_header('mida', params['mida'])
-
-    return res.redirect(frontend_url=config['FRONTEND_URL_CALLBACK'] + '?mida=' + params['mida'])
+    return res.redirect(frontend_url=config['FRONTEND_LOGIN_CALLBACK_URL'], params={'mida' : params['mida']})
 
 
 # Route for auth logout
@@ -88,6 +86,7 @@ def logout(res):
         'user_id' : request.user_id
     }
 
+    auth.remove_scopes(params)
     auth.remove_session(params)
 
     return res.redirect(frontend_url='/')

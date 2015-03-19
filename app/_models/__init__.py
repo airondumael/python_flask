@@ -2,12 +2,10 @@ from sqlalchemy import MetaData, Table
 from sqlalchemy.orm import create_session
 from sqlalchemy.ext.declarative import declarative_base
 
-from app import app
 
-
-db = app.db
 Base = declarative_base()
-metadata = MetaData(bind=app.db.music_db.get_bind())
+metadata = None
+db = None
 
 
 class BaseModel(Base):
@@ -23,7 +21,7 @@ class BaseModel(Base):
 
     def select(self, _params={}):
         result = []
-        data = db.music_db.query(BaseModel).filter_by(**_params)
+        data = db.query(BaseModel).filter_by(**_params)
 
         for row in data:
             result.append(row.to_dict())
@@ -32,11 +30,16 @@ class BaseModel(Base):
 
 
     def insert(self, _params):
-        db.music_db.execute(self.__table__.insert().values(**_params))
-        db.music_db.commit()
-        db.music_db.close()
+        db.execute(self.__table__.insert().values(**_params))
+        db.commit()
+        db.close()
 
 
     def update(self, _params):
-        db.music_db.execute(self.__table__.update().where(sef.__table__.c))
+        db.execute(self.__table__.update().where(sef.__table__.c))
+
+
+def bind_db(database):
+    metadata = MetaData(bind=database.get_bind())
+    db = database
 

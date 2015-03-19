@@ -1,8 +1,5 @@
 # Import global context
-from flask import redirect, request
-
-# Import development environment
-from instance.env import development
+from flask import current_app as app, redirect, request
 
 # Import app-based dependencies
 from util import utils
@@ -21,7 +18,7 @@ def check_tokens(func):
         response = Response()
         response.set_header('nida', utils.nida())
 
-        return response.redirect(frontend_error_url='/', data='Session expired')
+        return response.redirect(frontend_error_url='/', params={'error' : 'Session expired'})
 
 
     @wraps(func)
@@ -30,7 +27,7 @@ def check_tokens(func):
         mida = request.headers.get('mida')
 
         if mida and access_token:
-            db = database.make_engine(development.MYSQL_MUSIC)
+            db = database.make_engine(app.config['MYSQL_MUSIC'])
 
             params = {
                 'mida' : mida
@@ -60,7 +57,6 @@ def make_response(func):
     def wrapper(*args, **kw):
         response = Response()
         response.set_header('nida', utils.nida())
-        response.set_header('Access-Control-Allow-Origin', '*')
 
         return func(res = response, *args, **kw)
 

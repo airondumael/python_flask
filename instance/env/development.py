@@ -38,3 +38,7 @@ FACCOUNTS_PARAMS = {
     'response_type' : 'code',
     'roles'         : 'profile,email,partner'
 }
+
+
+# Music Frontend Freedom Callback URL
+FRONTEND_LOGIN_CALLBACK_URL = 'http://dev.music.freedom.tm:8000/#/login/callback'
