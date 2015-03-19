@@ -43,6 +43,24 @@ CREATE TABLE `scopes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+CREATE TABLE `music_providers` (
+    `id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
+    `name` varchar(50) COLLATE utf8_unicode_ci,
+    `description` varchar(200) COLLATE utf8_unicode_ci,
+    `logo` varchar(100) COLLATE utf8_unicode_ci,
+    `banner` varchar(100) COLLATE utf8_unicode_ci,
+    `website` varchar(100) COLLATE utf8_unicode_ci,
+    `owner_id` varchar(37) COLLATE utf8_unicode_ci,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+CREATE TABLE `music_provider_managers` (
+    `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
+    `mp_id` varchar(37) COLLATE utf8_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
 -- CREATE TABLE `users_access_token` (
 --     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
 --     `access_token` varchar(37) COLLATE utf8_unicode_ci DEFAULT NULL,
