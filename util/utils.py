@@ -127,7 +127,7 @@ def mida(access_token):
     return hash(SALT + hash(access_token))
 
 def has_scopes(mida, scope):
-    db = database.make_engine(config['MYSQL_MUSIC'])
+    db = database.make_engine(app.config['MYSQL_MUSIC'])
 
     params = {
         'mida'  : mida,

@@ -5,7 +5,7 @@ from flask import request
 from flask import Blueprint
 
 # Import app-based dependencies
-from app import user
+from app import auth, user
 from util import utils
 
 # Import core libraries
@@ -44,7 +44,32 @@ def edit_user(res):
         'rank'      : request.form['rank']
     }
 
-    user.edit_user(params)
+    if utils.has_scopes(request.headers.get('mida'), 'user.info'):
+        user.edit_user(params)
+        return res.send(user.get_user(params)[0])
 
-    return res.send(params)
+    else:
+        return res.redirect(frontend_error_url='/',
+            params={'error' : 'You do not have permission to do this action'})
+
+
+@mod_user.route('/', methods=['DELETE'])
+@check_tokens
+@make_response
+def delete_user(res):
+    params = {
+        'user_id'    : request.form['user_id']
+    }
+
+    if utils.has_scopes(request.headers.get('mida'), 'user.delete'):
+        user.delete_user(params)
+
+        auth.remove_scopes(params)
+        auth.remove_session(params)
+
+        return res.send('User deleted')
+
+    else:
+        return res.redirect(frontend_error_url='/',
+            params={'error' : 'You do not have permission to do this action'})
 

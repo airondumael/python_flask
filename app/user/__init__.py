@@ -19,6 +19,12 @@ def add_user(_params):
     return data
 
 
+def delete_user(_params):
+    data = database.query(db.music_db, 'DELETE FROM users WHERE user_id = :user_id', _params)
+
+    return data
+
+
 def edit_user(_params):
     data = database.query(db.music_db, 'UPDATE users SET active = :active, rank = :rank WHERE user_id = :user_id', _params)
 
