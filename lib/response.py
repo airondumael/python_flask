@@ -1,6 +1,9 @@
 # Import global context
 from flask import json, make_response, redirect
 
+# Import app-based dependencies
+from util import utils
+
 
 class Response():
 
@@ -26,17 +29,12 @@ class Response():
         return response
 
 
-    def redirect(self, frontend_url=None, frontend_error_url=None, data=None):
+    def redirect(self, frontend_url=None, frontend_error_url=None, params={}):
         if frontend_url:
-            response = make_response(redirect(frontend_url))
+            response = make_response(redirect(frontend_url + '?' + utils.encode_params(params)))
 
         else:
-            response = make_response(redirect(frontend_error_url))
-
-        for key in self.headers:
-            response.headers.add(key, self.headers[key])
-
-        response.data = data
+            response = make_response(redirect(frontend_error_url + '?' + utils.encode_params(params)))
 
         return response
 
