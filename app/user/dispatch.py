@@ -41,27 +41,28 @@ def edit_user(res):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
-    params = {
-        'user_id'   : request.user_id,
-        'active'    : request.form['active'],
-        'rank'      : request.form['rank']
-    }
-    
+    params = utils.get_data(['active', 'rank'], {}, request.values)
+
+    if params['error']:
+        return res.redirect(frontend_error_url='/', params=params)
+
+    params['user_id'] = request.user_id
+
     user.edit_user(params)
 
     return res.send(user.get_user(params)[0])
 
 
-@mod_user.route('/', methods=['DELETE'])
+@mod_user.route('/<user_id>', methods=['DELETE'])
 @check_tokens
 @make_response
-def delete_user(res):
+def delete_user(res, user_id):
     if not utils.has_scopes(request.headers.get('mida'), 'user.delete'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
     params = {
-        'user_id' : request.form['user_id']
+        'user_id' : user_id
     }
 
     user.delete_user(params)

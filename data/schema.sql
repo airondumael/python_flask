@@ -72,6 +72,7 @@ CREATE TABLE `tracks` (
     `instrument` varchar(1000) COLLATE utf8_unicode_ci,
     `lyrics` text(1000000) COLLATE utf8_unicode_ci,
     `country` varchar(50) COLLATE utf8_unicode_ci,
+    `filename` varchar(50) COLLATE utf8_unicode_ci,
     PRIMARY KEY (`track_id`),
     INDEX `titles` (`title`(10)),
     INDEX `artists` (`artist`(10)),
