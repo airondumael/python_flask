@@ -4,13 +4,8 @@ from app import app
 # Import core libraries
 from lib import database
 
+
 db = app.db
-
-
-def add_roles(_params):
-    data = database.query(db.music_db, 'INSERT INTO user_roles VALUES(:user_id, :role)', _params)
-
-    return data
 
 
 def add_user(_params):
@@ -43,9 +38,9 @@ def user_exists(_params):
     return data
 
 
-def get_scopes(_params):
-    data = database.get(db.music_db, 'SELECT scope FROM scopes WHERE roles LIKE \
-        CONCAT(CONCAT("%", (SELECT role FROM user_roles WHERE user_id = :user_id)), "%");', _params)
+# def get_scopes(_params):
+#     data = database.get(db.music_db, 'SELECT scope FROM scopes WHERE roles LIKE \
+#         CONCAT(CONCAT("%", (SELECT role FROM user_roles WHERE user_id = :user_id)), "%");', _params)
 
-    return data
+#     return data
 

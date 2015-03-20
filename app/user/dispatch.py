@@ -22,54 +22,52 @@ mod_user = Blueprint('user', __name__)
 @check_tokens
 @make_response
 def get_user(res):
+    if not utils.has_scopes(request.headers.get('mida'), 'user.info'):
+        return res.redirect(frontend_error_url='/',
+            params={'error' : 'You do not have permission to do this action'})
+
     params = {
         'user_id' : request.user_id
     }
 
-    if utils.has_scopes(request.headers.get('mida'), 'user.info'):
-        return res.send(user.get_user(params)[0])
-
-    else:
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+    return res.send(user.get_user(params)[0])
 
 
 @mod_user.route('/', methods=['POST'])
 @check_tokens
 @make_response
 def edit_user(res):
+    if not utils.has_scopes(request.headers.get('mida'), 'user.info'):
+        return res.redirect(frontend_error_url='/',
+            params={'error' : 'You do not have permission to do this action'})
+
     params = {
         'user_id'   : request.user_id,
         'active'    : request.form['active'],
         'rank'      : request.form['rank']
     }
+    
+    user.edit_user(params)
 
-    if utils.has_scopes(request.headers.get('mida'), 'user.info'):
-        user.edit_user(params)
-        return res.send(user.get_user(params)[0])
-
-    else:
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+    return res.send(user.get_user(params)[0])
 
 
 @mod_user.route('/', methods=['DELETE'])
 @check_tokens
 @make_response
 def delete_user(res):
-    params = {
-        'user_id'    : request.form['user_id']
-    }
-
-    if utils.has_scopes(request.headers.get('mida'), 'user.delete'):
-        user.delete_user(params)
-
-        auth.remove_scopes(params)
-        auth.remove_session(params)
-
-        return res.send('User deleted')
-
-    else:
+    if not utils.has_scopes(request.headers.get('mida'), 'user.delete'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
+
+    params = {
+        'user_id' : request.form['user_id']
+    }
+
+    user.delete_user(params)
+
+    auth.remove_scopes(params)
+    auth.remove_session(params)
+
+    return res.send('User deleted')
 

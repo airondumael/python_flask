@@ -51,8 +51,7 @@ def freedom_callback(res):
     params = {
         'user_id'   : utils.generate_UUID(),
         'email'     : data['email'],
-        'role'      : 'all',
-        'scopes'     : ['user.info', 'music.list'],
+        'scopes'    : ['user.info', 'music.list'],
         'mida'      : utils.mida(access_token)
     }
 
@@ -60,10 +59,12 @@ def freedom_callback(res):
 
     if user_data:
         params['user_id'] = user_data[0]['user_id']
+     
+        if user_data[0]['role'] == 'admin':
+            params['scopes'].append('user.delete')
 
     else:
         user.add_user(params)
-        user.add_roles(params)
     
     auth.add_scopes(params)
     auth.add_session(params)
