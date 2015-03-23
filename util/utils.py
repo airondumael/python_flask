@@ -151,15 +151,15 @@ def mida(access_token):
     return hash(SALT + hash(access_token))
 
 
-def has_scopes(mida, scope):
+def has_scopes(mida, *scopes):
     db = database.make_engine(app.config['MYSQL_MUSIC'])
 
     params = {
-        'mida'  : mida,
-        'scope' : scope
+        'mida'      : mida,
+        'scopes'    : scopes
     }
 
-    data = database.get(db, 'SELECT * FROM user_scopes WHERE mida = :mida AND scope = :scope', params)
+    data = database.get(db, 'SELECT * FROM user_scopes WHERE mida = :mida AND scope IN :scopes', params)
 
-    return data
+    return data if len(data) == len(scopes) else None
 

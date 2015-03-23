@@ -30,6 +30,14 @@ CREATE TABLE `user_scopes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+CREATE TABLE `user_preferences` (
+    `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
+    `genre` varchar(50) COLLATE utf8_unicode_ci,
+    `mood` varchar(50) COLLATE utf8_unicode_ci,
+    `instrument` varchar(50) COLLATE utf8_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
 CREATE TABLE `session` (
     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
     `mida` varchar(50) COLLATE utf8_unicode_ci
