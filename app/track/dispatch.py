@@ -29,7 +29,7 @@ def get_track_info(res, track_id):
         'track_id' : track_id
     }
 
-    return res.send(track.get_track_info(params))
+    return res.send(track.get_track_info(params)[0])
 
 
 @mod_track.route('/<track_id>', methods=['POST'])
@@ -49,7 +49,7 @@ def edit_track_info(res, track_id):
 
     track.edit_track_info(params)
 
-    return res.send(track.get_track_info(params))
+    return res.send(track.get_track_info(params)[0])
 
 
 @mod_track.route('/<track_id>', methods=['DELETE'])
@@ -106,6 +106,21 @@ def get_recommended_tracks(res):
     }
 
     return res.send(track.get_recommended_tracks(params))
+
+
+@mod_track.route('/search/<query>', methods=['GET'])
+@check_tokens
+@make_response
+def search_tracks(res, query):
+    if not utils.has_scopes(request.headers.get('mida'), 'music.list'):
+        return res.redirect(frontend_error_url='/',
+            params={'error' : 'You do not have permission to do this action'})
+
+    params = {
+        'query' : query
+    }
+
+    return res.send(track.search_tracks(params))
 
 
 @mod_track.route('/upload', methods=['POST'])

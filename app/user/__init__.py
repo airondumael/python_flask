@@ -50,7 +50,8 @@ def get_preference(_params):
 
 
 def get_user(_params):
-    data = database.get(db.music_db, 'SELECT * FROM users WHERE user_id = :user_id', _params)
+    data = database.get(db.music_db, 'SELECT users.*, genre, mood, instrument FROM users \
+        JOIN user_preferences WHERE users.user_id = :user_id', _params)
 
     return data
 

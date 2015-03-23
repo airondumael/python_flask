@@ -56,6 +56,25 @@ def get_track_info(_params):
     return data
 
 
+def search_tracks(_params):
+    _params['query'] = '%' + _params['query'] + '%'
+    result = {}
+
+    data = database.get(db.music_db, 'SELECT * FROM tracks WHERE title LIKE :query', _params)
+    result['title'] = data
+
+    data = database.get(db.music_db, 'SELECT * FROM tracks WHERE artist LIKE :query', _params)
+    result['artist'] = data
+
+    data = database.get(db.music_db, 'SELECT * FROM tracks WHERE album LIKE :query', _params)
+    result['album'] = data
+
+    data = database.get(db.music_db, 'SELECT * FROM tracks WHERE genre LIKE :query', _params)
+    result['genre'] = data
+
+    return result
+
+
 def upload_track(_params):
     key = bucket.new_key(_params['filename'])
 
