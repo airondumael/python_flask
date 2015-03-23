@@ -25,4 +25,10 @@ SECRET_KEY = "3c135fcaca9a1f1108132c9453f547cb"
 # Freedom Accounts URL
 FACCOUNTS_URL = 'http://api.accounts.freedom.tm:80'
 
+# CORS
+ALLOWED_HEADERS = ['mida', 'Access-Token', 'nida']
+ALLOWED_ORIGINS = '*'
+ALLOWED_METHODS = ['GET', 'HEAD', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
+
+
 print " * Loading config for " + APP_NAME

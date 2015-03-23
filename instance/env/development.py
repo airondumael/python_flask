@@ -34,7 +34,11 @@ MYSQL_MUSIC = {
 # Freedom Accounts Config
 FACCOUNTS_PARAMS = {
     'service'       : 'music_dashboard',
-    'redirect_uri'  : 'http://dev.music.tm:3000/auth/callback',
+    'redirect_uri'  : 'http://dev.music.freedom.tm:3000/auth/callback',
     'response_type' : 'code',
     'roles'         : 'profile,email,partner'
 }
+
+
+# Music Frontend Freedom Callback URL
+FRONTEND_LOGIN_CALLBACK_URL = 'http://dev.music.freedom.tm:8000/#/login/callback'

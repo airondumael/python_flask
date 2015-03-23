@@ -13,12 +13,6 @@ def add_roles(_params):
     return data
 
 
-def add_scopes(_params):
-    data = database.query(db.music_db, 'INSERT INTO user_scopes VALUES(:user_id, :scope)', _params)
-
-    return data
-
-
 def add_user(_params):
     data = database.query(db.music_db, 'INSERT INTO users(`user_id`, `email`) VALUES(:user_id, :email)', _params)
 

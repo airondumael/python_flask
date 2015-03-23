@@ -24,15 +24,14 @@ CREATE TABLE `user_roles` (
 
 CREATE TABLE `user_scopes` (
     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
-    `scope` varchar(200) COLLATE utf8_unicode_ci DEFAULT 'user.info,music.list',
-    PRIMARY KEY (`user_id`)
+    `mida` varchar(50) COLLATE utf8_unicode_ci,
+    `scope` varchar(200) COLLATE utf8_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 CREATE TABLE `session` (
     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
-    `mida` varchar(50) COLLATE utf8_unicode_ci,
-    PRIMARY KEY (`user_id`)
+    `mida` varchar(50) COLLATE utf8_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -41,6 +40,24 @@ CREATE TABLE `scopes` (
     `description` varchar(200) COLLATE utf8_unicode_ci,
     `roles` varchar(50) COLLATE utf8_unicode_ci,
     PRIMARY KEY (`scope`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+CREATE TABLE `music_providers` (
+    `id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
+    `name` varchar(50) COLLATE utf8_unicode_ci,
+    `description` varchar(200) COLLATE utf8_unicode_ci,
+    `logo` varchar(100) COLLATE utf8_unicode_ci,
+    `banner` varchar(100) COLLATE utf8_unicode_ci,
+    `website` varchar(100) COLLATE utf8_unicode_ci,
+    `owner_id` varchar(37) COLLATE utf8_unicode_ci,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+CREATE TABLE `music_provider_managers` (
+    `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
+    `mp_id` varchar(37) COLLATE utf8_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 

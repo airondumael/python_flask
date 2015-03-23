@@ -24,19 +24,30 @@ mod_track = Blueprint('track', __name__)
 @check_tokens
 @make_response
 def upload(res):
-    file = request.files['file']
-    
-    if file and track.allowed_file(file.filename):
+    messages = []
+
+    files = request.files.getlist('file[]')
+
+    for file in files:
+        print file.filename
         filename = secure_filename(file.filename)
 
-        params = {
-            'file'      : file,
-            'filename'  : filename
-        }
+        message = 'Uploading ' + filename
 
-        track.upload_track(params)
+        if file and track.allowed_file(file.filename):
+            params = {
+                'file'      : file,
+                'filename'  : filename
+            }
 
-        return res.send('upload success')
+            track.upload_track(params)
 
-    return res.send('upload failed')
+            message += ' success'
+
+        else:
+            message += ' failed'
+
+        messages.append(message)
+
+    return res.send(messages)
 

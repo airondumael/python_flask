@@ -6,6 +6,7 @@ from flask import Blueprint
 
 # Import app-based dependencies
 from app import user
+from util import utils
 
 # Import core libraries
 from lib.decorators import check_tokens, make_response
@@ -25,7 +26,12 @@ def get_user(res):
         'user_id' : request.user_id
     }
 
-    return res.send(user.get_user(params)[0])
+    if utils.has_scopes(request.headers.get('mida'), 'user.info'):
+        return res.send(user.get_user(params)[0])
+
+    else:
+        return res.redirect(frontend_error_url='/',
+            params={'error' : 'You do not have permission to do this action'})
 
 
 @mod_user.route('/', methods=['POST'])
@@ -40,16 +46,5 @@ def edit_user(res):
 
     user.edit_user(params)
 
-    return res.send('edit success')
-
-
-@mod_user.route('/scope', methods=['GET'])
-@check_tokens
-@make_response
-def get_scopes(res):
-    params = {
-        'user_id' : request.user_id
-    }
-
-    return res.send(user.get_scopes(params))
+    return res.send(params)
 
