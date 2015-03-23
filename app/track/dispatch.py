@@ -135,13 +135,14 @@ def upload_track(res):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
-    messages = []
+    result = []
 
     files = request.files.getlist('file[]')
 
     for file in files:
         filename = secure_filename(file.filename)
 
+        params = {}
         message = 'Uploading ' + filename
 
         if file and track.allowed_file(file.filename):
@@ -159,7 +160,10 @@ def upload_track(res):
         else:
             message += ' failed'
 
-        messages.append(message)
+        params.pop('file', None)
+        params['message'] = message
 
-    return res.send(messages)
+        result.append(params)
+
+    return res.send(result)
 
