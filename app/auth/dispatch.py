@@ -61,7 +61,10 @@ def freedom_callback(res):
         params['user_id'] = user_data[0]['user_id']
      
         if user_data[0]['role'] == 'admin':
-            params['scopes'].append('user.delete')
+            params['scopes'] = config['ADMIN_SCOPES']
+
+        elif user_data[0]['role'] == 'staff':
+            params['scopes'] = config['STAFF_SCOPES']
 
     else:
         user.add_user(params)

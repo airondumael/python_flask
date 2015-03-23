@@ -25,6 +25,10 @@ mod_track = Blueprint('track', __name__)
 @check_tokens
 @make_response
 def get_track_info(res, track_id):
+    if not utils.has_scopes(request.headers.get('mida'), 'music.list'):
+        return res.redirect(frontend_error_url='/',
+            params={'error' : 'You do not have permission to do this action'})
+
     params = {
         'track_id' : track_id
     }
@@ -36,7 +40,7 @@ def get_track_info(res, track_id):
 @check_tokens
 @make_response
 def edit_track_info(res, track_id):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.edit'):
+    if not utils.has_scopes(request.headers.get('mida'), 'music.meta'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 

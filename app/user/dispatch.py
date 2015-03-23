@@ -5,7 +5,7 @@ from flask import request
 from flask import Blueprint
 
 # Import app-based dependencies
-from app import auth, user
+from app import app, auth, user
 from util import utils
 
 # Import core libraries
@@ -41,7 +41,7 @@ def edit_user(res):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
-    params = utils.get_data(['active', 'rank', 'genre', 'mood', 'instrument'], {}, request.values)
+    params = utils.get_data(app.config['USERS_FIELDS'], {}, request.values)
 
     if params['error']:
         return res.redirect(frontend_error_url='/', params=params)

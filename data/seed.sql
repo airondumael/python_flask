@@ -2,16 +2,6 @@
 INSERT INTO users(`user_id`, `email`, `role`) VALUES('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'airon@any.tv', 'admin');
 
 
-TRUNCATE music_providers;
-
-INSERT INTO music_providers VALUES('167afcf6-651f-42b6-8d70-1474101e7f44', 'Position Music', '', '', '', '', 'a55953bc-3e67-4843-bca7-01f9301155c6');
-
-
-TRUNCATE music_provider_managers;
-
-INSERT INTO music_provider_managers VALUES('d07c795c-8d03-4ef0-b07e-967a9b6ab2c4', '167afcf6-651f-42b6-8d70-1474101e7f44');
-
-
 TRUNCATE scopes;
 
 # user

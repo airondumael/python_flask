@@ -30,6 +30,18 @@ ALLOWED_HEADERS = ['mida', 'Access-Token', 'nida']
 ALLOWED_ORIGINS = '*'
 ALLOWED_METHODS = ['GET', 'HEAD', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
 
+# Admin Scopes
+ADMIN_SCOPES = ['user.info', 'user.delete', 'music.list', 'music.add', 'music.delete', 'music.meta', 'music_provider.add']
+
+# Staff Scopes
+STAFF_SCOPES = ['user.info', 'music.list', 'music.add', 'music.meta']
+
+# User
+USERS_FIELDS = ['active', 'rank', 'genre', 'mood', 'instrument']
+
+# Music Providers
+MUSIC_PROVIDERS_FIELDS = ['name', 'description', 'owner', 'image', 'logo', 'banner', 'website', 'email', 'contact_numbers']
+
 # Tracks
 TRACKS_FIELDS = ['title', 'artist', 'album', 'genre', 'mood', 'instrument', 'lyrics', 'country']
 
