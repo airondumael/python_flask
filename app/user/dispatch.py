@@ -41,7 +41,7 @@ def edit_user(res):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
-    params = utils.get_data(['active', 'rank'], {}, request.values)
+    params = utils.get_data(['active', 'rank', 'genre', 'mood', 'instrument'], {}, request.values)
 
     if params['error']:
         return res.redirect(frontend_error_url='/', params=params)
@@ -49,6 +49,7 @@ def edit_user(res):
     params['user_id'] = request.user_id
 
     user.edit_user(params)
+    user.edit_preference(params)
 
     return res.send(user.get_user(params)[0])
 

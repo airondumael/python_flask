@@ -65,6 +65,7 @@ def freedom_callback(res):
 
     else:
         user.add_user(params)
+        user.add_preference(params)
     
     auth.add_scopes(params)
     auth.add_session(params)
