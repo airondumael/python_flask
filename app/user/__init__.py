@@ -14,8 +14,20 @@ def add_preference(_params):
     return data
 
 
+def add_scopes(_params):
+    scopes = _params['scopes']
+    query = 'INSERT INTO user_scopes VALUES '
+
+    for scope in scopes:
+        query += '(:user_id, \'' + scope + '\'),'
+
+    data = database.query(db.music_db, query[:-1], _params)
+
+    return data
+
+
 def add_user(_params):
-    data = database.query(db.music_db, 'INSERT INTO users(`user_id`, `email`) VALUES(:user_id, :email)', _params)
+    data = database.query(db.music_db, 'INSERT INTO users(`user_id`, `email`, `role`) VALUES(:user_id, :email, :role)', _params)
 
     return data
 
@@ -39,6 +51,12 @@ def edit_preference(_params):
 
 def edit_user(_params):
     data = database.query(db.music_db, 'UPDATE users SET active = :active, rank = :rank WHERE user_id = :user_id', _params)
+
+    return data
+
+
+def get_all_users():
+    data = database.get(db.music_db, 'SELECT * FROM users', {})
 
     return data
 

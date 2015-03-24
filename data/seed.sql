@@ -12,6 +12,7 @@ TRUNCATE user_scopes;
 -- admin scopes
 INSERT INTO user_scopes VALUES  ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'user.info'),
                                 ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'user.delete'),
+                                ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'user.view_all'),
                                 ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'music.list'),
                                 ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'music.add'),
                                 ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'music.delete'),

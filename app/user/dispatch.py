@@ -33,6 +33,17 @@ def get_user(res):
     return res.send(user.get_user(params)[0])
 
 
+@mod_user.route('/all', methods=['GET'])
+@check_tokens
+@make_response
+def get_all_users(res):
+    if not utils.has_scopes(request.user_id, 'user.view_all'):
+        return res.redirect(frontend_error_url='/',
+            params={'error' : 'You do not have permission to do this action'})
+
+    return res.send(user.get_all_users())
+
+
 @mod_user.route('/', methods=['POST'])
 @check_tokens
 @make_response

@@ -40,7 +40,7 @@ STAFF_SCOPES = ['user.info', 'music.list', 'music.add', 'music.meta']
 USERS_FIELDS = ['active', 'rank', 'genre', 'mood', 'instrument']
 
 # Music Providers
-MUSIC_PROVIDERS_FIELDS = ['name', 'description', 'owner', 'image', 'logo', 'banner', 'website', 'email', 'contact_numbers']
+MUSIC_PROVIDERS_FIELDS = ['name', 'description', 'owner_id', 'image', 'logo', 'banner', 'website', 'email', 'contact_numbers']
 
 # Tracks
 TRACKS_FIELDS = ['title', 'artist', 'album', 'genre', 'mood', 'instrument', 'lyrics', 'country']
