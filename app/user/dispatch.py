@@ -44,7 +44,7 @@ def edit_user(res):
     params = utils.get_data(app.config['USERS_FIELDS'], {}, request.values)
 
     if params['error']:
-        return res.redirect(frontend_error_url='/', params=params)
+        return res.redirect(frontend_error_url='/', params={'error' : params['error']})
 
     params['user_id'] = request.user_id
 

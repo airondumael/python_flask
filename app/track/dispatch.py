@@ -47,7 +47,7 @@ def edit_track_info(res, track_id):
     params = utils.get_data(app.config['TRACKS_FIELDS'], {}, request.values)
 
     if params['error']:
-        return res.redirect(frontend_error_url='/', params=params)
+        return res.redirect(frontend_error_url='/', params={'error' : params['error']})
 
     params['track_id'] = track_id
 

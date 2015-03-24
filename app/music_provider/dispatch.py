@@ -11,6 +11,9 @@ from util import utils
 # Import core libraries
 from lib.decorators import check_tokens, make_response
 
+# Other imports
+import datetime
+
 
 # Define the blueprint: 'music_provider', set its url prefix: app.url/music-provider
 mod_music_provider = Blueprint('music_provider', __name__)
@@ -29,9 +32,10 @@ def add_music_provider(res):
     params = utils.get_data(app.config['MUSIC_PROVIDERS_FIELDS'], {}, request.values)
 
     if params['error']:
-        return res.redirect(frontend_error_url='/', params=params)
+        return res.redirect(frontend_error_url='/', params={'error' : params['error']})
 
     params['id'] = utils.generate_UUID()
+    params['date_created'] = datetime.datetime.now()
 
     music_provider.add_music_provider(params)
 
