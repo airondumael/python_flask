@@ -6,3 +6,4 @@ itsdangerous==0.24
 virtualenv==1.11.6
 wsgiref==0.1.2
 flask-cors==1.10.3
+boto==2.36.0
