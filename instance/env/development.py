@@ -34,7 +34,7 @@ MYSQL_MUSIC = {
 # Freedom Accounts Config
 FACCOUNTS_PARAMS = {
     'service'       : 'music_dashboard',
-    'redirect_uri'  : 'http://dev.music.freedom.tm:3000/auth/callback',
+    'redirect_uri'  : 'http://dev.music.tm:3000/auth/callback',
     'response_type' : 'code',
     'roles'         : 'profile,email,partner'
 }

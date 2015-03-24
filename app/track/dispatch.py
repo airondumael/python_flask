@@ -25,6 +25,10 @@ mod_track = Blueprint('track', __name__)
 @check_tokens
 @make_response
 def get_track_info(res, track_id):
+    if not utils.has_scopes(request.user_id, 'music.list'):
+        return res.redirect(frontend_error_url='/',
+            params={'error' : 'You do not have permission to do this action'})
+
     params = {
         'track_id' : track_id
     }
@@ -36,14 +40,14 @@ def get_track_info(res, track_id):
 @check_tokens
 @make_response
 def edit_track_info(res, track_id):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.edit'):
+    if not utils.has_scopes(request.user_id, 'music.meta'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
     params = utils.get_data(app.config['TRACKS_FIELDS'], {}, request.values)
 
     if params['error']:
-        return res.redirect(frontend_error_url='/', params=params)
+        return res.redirect(frontend_error_url='/', params={'error' : params['error']})
 
     params['track_id'] = track_id
 
@@ -56,7 +60,7 @@ def edit_track_info(res, track_id):
 @check_tokens
 @make_response
 def delete_track(res, track_id):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.delete'):
+    if not utils.has_scopes(request.user_id, 'music.delete'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
@@ -89,7 +93,7 @@ def delete_track(res, track_id):
 @check_tokens
 @make_response
 def get_recommended_tracks(res):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.list', 'user.info'):
+    if not utils.has_scopes(request.user_id, 'music.list', 'user.info'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
@@ -109,12 +113,12 @@ def get_recommended_tracks(res):
 
 
 @mod_track.route('/search/<query>', methods=['GET'])
-@check_tokens
+# @check_tokens
 @make_response
 def search_tracks(res, query):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.list'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+    # if not utils.has_scopes(request.user_id, 'music.list'):
+    #     return res.redirect(frontend_error_url='/',
+    #         params={'error' : 'You do not have permission to do this action'})
 
     params = {
         'query' : query
@@ -127,17 +131,18 @@ def search_tracks(res, query):
 @check_tokens
 @make_response
 def upload_track(res):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.add'):
+    if not utils.has_scopes(request.user_id, 'music.add'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
-    messages = []
+    result = []
 
     files = request.files.getlist('file[]')
 
     for file in files:
         filename = secure_filename(file.filename)
 
+        params = {}
         message = 'Uploading ' + filename
 
         if file and track.allowed_file(file.filename):
@@ -155,7 +160,10 @@ def upload_track(res):
         else:
             message += ' failed'
 
-        messages.append(message)
+        params.pop('file', None)
+        params['message'] = message
 
-    return res.send(messages)
+        result.append(params)
+
+    return res.send(result)
 

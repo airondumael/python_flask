@@ -25,7 +25,6 @@ CREATE TABLE `users` (
 
 CREATE TABLE `user_scopes` (
     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
-    `mida` varchar(50) COLLATE utf8_unicode_ci,
     `scope` varchar(200) COLLATE utf8_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -34,7 +33,9 @@ CREATE TABLE `user_preferences` (
     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
     `genre` varchar(50) COLLATE utf8_unicode_ci,
     `mood` varchar(50) COLLATE utf8_unicode_ci,
-    `instrument` varchar(50) COLLATE utf8_unicode_ci
+    `instrument` varchar(50) COLLATE utf8_unicode_ci,
+    `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date_updated` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -44,30 +45,36 @@ CREATE TABLE `session` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-CREATE TABLE `scopes` (
-    `scope` varchar(20) COLLATE utf8_unicode_ci,
-    `description` varchar(200) COLLATE utf8_unicode_ci,
-    `roles` varchar(50) COLLATE utf8_unicode_ci,
-    PRIMARY KEY (`scope`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+-- CREATE TABLE `scopes` (
+--     `scope` varchar(20) COLLATE utf8_unicode_ci,
+--     `description` varchar(200) COLLATE utf8_unicode_ci,
+--     `roles` varchar(50) COLLATE utf8_unicode_ci,
+--     PRIMARY KEY (`scope`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 CREATE TABLE `music_providers` (
     `id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
     `name` varchar(50) COLLATE utf8_unicode_ci,
     `description` varchar(200) COLLATE utf8_unicode_ci,
+    `owner` varchar(50) COLLATE utf8_unicode_ci,
+    `image` varchar(100) COLLATE utf8_unicode_ci,
     `logo` varchar(100) COLLATE utf8_unicode_ci,
     `banner` varchar(100) COLLATE utf8_unicode_ci,
     `website` varchar(100) COLLATE utf8_unicode_ci,
-    `owner_id` varchar(37) COLLATE utf8_unicode_ci,
+    `email` varchar(37) COLLATE utf8_unicode_ci,
+    `contact_numbers` varchar(100) COLLATE utf8_unicode_ci,
+    `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date_updated` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    -- `owner_id` varchar(37) COLLATE utf8_unicode_ci,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-CREATE TABLE `music_provider_managers` (
-    `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
-    `mp_id` varchar(37) COLLATE utf8_unicode_ci
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+-- CREATE TABLE `music_provider_managers` (
+--     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
+--     `mp_id` varchar(37) COLLATE utf8_unicode_ci
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 CREATE TABLE `tracks` (
@@ -81,10 +88,16 @@ CREATE TABLE `tracks` (
     `lyrics` text(1000000) COLLATE utf8_unicode_ci,
     `country` varchar(50) COLLATE utf8_unicode_ci,
     `filename` varchar(50) COLLATE utf8_unicode_ci,
+    `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date_updated` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`track_id`),
     INDEX `titles` (`title`(10)),
     INDEX `artists` (`artist`(10)),
     INDEX `albums` (`album`(10)),
+    INDEX `genres` (`genre`(10)),
+    INDEX `moods` (`mood`(10)),
+    INDEX `instruments` (`instrument`(10)),
+    INDEX `lyricss` (`lyrics`(10)),
     INDEX `countries` (`country`(10))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

@@ -5,7 +5,7 @@ from flask import request
 from flask import Blueprint
 
 # Import app-based dependencies
-from app import auth, user
+from app import app, auth, user
 from util import utils
 
 # Import core libraries
@@ -22,7 +22,7 @@ mod_user = Blueprint('user', __name__)
 @check_tokens
 @make_response
 def get_user(res):
-    if not utils.has_scopes(request.headers.get('mida'), 'user.info'):
+    if not utils.has_scopes(request.user_id, 'user.info'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
@@ -37,14 +37,14 @@ def get_user(res):
 @check_tokens
 @make_response
 def edit_user(res):
-    if not utils.has_scopes(request.headers.get('mida'), 'user.info'):
+    if not utils.has_scopes(request.user_id, 'user.info'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
-    params = utils.get_data(['active', 'rank', 'genre', 'mood', 'instrument'], {}, request.values)
+    params = utils.get_data(app.config['USERS_FIELDS'], {}, request.values)
 
     if params['error']:
-        return res.redirect(frontend_error_url='/', params=params)
+        return res.redirect(frontend_error_url='/', params={'error' : params['error']})
 
     params['user_id'] = request.user_id
 
@@ -58,7 +58,7 @@ def edit_user(res):
 @check_tokens
 @make_response
 def delete_user(res, user_id):
-    if not utils.has_scopes(request.headers.get('mida'), 'user.delete'):
+    if not utils.has_scopes(request.user_id, 'user.delete'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
