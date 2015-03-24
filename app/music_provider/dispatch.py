@@ -22,7 +22,7 @@ mod_music_provider = Blueprint('music_provider', __name__)
 @check_tokens
 @make_response
 def add_music_provider(res):
-    if not utils.has_scopes(request.headers.get('mida'), 'music_provider.add'):
+    if not utils.has_scopes(request.user_id, 'music_provider.add'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 

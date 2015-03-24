@@ -25,7 +25,7 @@ mod_track = Blueprint('track', __name__)
 @check_tokens
 @make_response
 def get_track_info(res, track_id):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.list'):
+    if not utils.has_scopes(request.user_id, 'music.list'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
@@ -40,7 +40,7 @@ def get_track_info(res, track_id):
 @check_tokens
 @make_response
 def edit_track_info(res, track_id):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.meta'):
+    if not utils.has_scopes(request.user_id, 'music.meta'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
@@ -60,7 +60,7 @@ def edit_track_info(res, track_id):
 @check_tokens
 @make_response
 def delete_track(res, track_id):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.delete'):
+    if not utils.has_scopes(request.user_id, 'music.delete'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
@@ -93,7 +93,7 @@ def delete_track(res, track_id):
 @check_tokens
 @make_response
 def get_recommended_tracks(res):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.list', 'user.info'):
+    if not utils.has_scopes(request.user_id, 'music.list', 'user.info'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
@@ -113,12 +113,12 @@ def get_recommended_tracks(res):
 
 
 @mod_track.route('/search/<query>', methods=['GET'])
-@check_tokens
+# @check_tokens
 @make_response
 def search_tracks(res, query):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.list'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+    # if not utils.has_scopes(request.user_id, 'music.list'):
+    #     return res.redirect(frontend_error_url='/',
+    #         params={'error' : 'You do not have permission to do this action'})
 
     params = {
         'query' : query
@@ -131,7 +131,7 @@ def search_tracks(res, query):
 @check_tokens
 @make_response
 def upload_track(res):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.add'):
+    if not utils.has_scopes(request.user_id, 'music.add'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 

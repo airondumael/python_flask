@@ -22,7 +22,7 @@ mod_user = Blueprint('user', __name__)
 @check_tokens
 @make_response
 def get_user(res):
-    if not utils.has_scopes(request.headers.get('mida'), 'user.info'):
+    if not utils.has_scopes(request.user_id, 'user.info'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
@@ -37,7 +37,7 @@ def get_user(res):
 @check_tokens
 @make_response
 def edit_user(res):
-    if not utils.has_scopes(request.headers.get('mida'), 'user.info'):
+    if not utils.has_scopes(request.user_id, 'user.info'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 
@@ -58,7 +58,7 @@ def edit_user(res):
 @check_tokens
 @make_response
 def delete_user(res, user_id):
-    if not utils.has_scopes(request.headers.get('mida'), 'user.delete'):
+    if not utils.has_scopes(request.user_id, 'user.delete'):
         return res.redirect(frontend_error_url='/',
             params={'error' : 'You do not have permission to do this action'})
 

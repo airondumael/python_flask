@@ -12,7 +12,7 @@ def add_scopes(_params):
     query = 'INSERT INTO user_scopes VALUES '
 
     for scope in scopes:
-        query += '(:user_id, :mida, \'' + scope + '\'),'
+        query += '(:user_id, \'' + scope + '\'),'
 
     data = database.query(db.music_db, query[:-1], _params)
 
