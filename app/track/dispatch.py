@@ -47,7 +47,7 @@ def edit_track_info(res, track_id):
     params = utils.get_data(app.config['TRACKS_FIELDS'], {}, request.values)
 
     if params['error']:
-        return res.redirect(frontend_error_url='/', params={'error' : params['error']})
+        return res.send({'error' : params['error']})
 
     params['track_id'] = track_id
 
@@ -84,7 +84,7 @@ def delete_track(res, track_id):
 #     data = track.get_track_info(params)
 
 #     if not data:
-#         return res.redirect(frontend_error_url='/', params={'error' : 'Track does not exist'})
+#         return res.send({'error' : 'Track does not exist'})
 
 #     return res.send('s3.amazonaws.com/music.tm/' + data[0]['filename'])
 

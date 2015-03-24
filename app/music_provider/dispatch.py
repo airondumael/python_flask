@@ -47,7 +47,7 @@ def add_music_provider(res):
     params = utils.get_data(app.config['MUSIC_PROVIDERS_FIELDS'], {}, request.values)
 
     if params['error']:
-        return res.redirect(frontend_error_url='/', params={'error' : params['error']})
+        return res.send({'error' : params['error']})
 
     params['id'] = utils.generate_UUID()
     params['date_created'] = datetime.datetime.now()
@@ -72,7 +72,7 @@ def add_music_provider_manager(res):
     params = utils.get_data(['email', 'music_provider_id'], {}, request.values)
 
     if params['error']:
-        return res.redirect(frontend_error_url='/', params={'error' : params['error']})
+        return res.send({'error' : params['error']})
 
     params['user_id'] = request.user_id
 
