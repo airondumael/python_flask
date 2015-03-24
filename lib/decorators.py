@@ -23,7 +23,7 @@ def check_tokens(func):
 
     @wraps(func)
     def wrapper(*args, **kw):
-        access_token = request.headers.get('access_token')
+        access_token = request.headers.get('Access-Token')
         mida = request.headers.get('mida')
 
         if mida and access_token:

@@ -4,23 +4,30 @@ from flask import current_app as app
 # Import core libraries
 from lib import database
 
+# Other imports
 import datetime, hashlib, io, json, math, random, time, urllib, uuid
 
 
 SALT = '5a52bf3ae03b415cbb1ff6df1265b019'
 
+
 def hash(string):
     return hashlib.sha1(str(string)).hexdigest()
+
 
 def get_data(reqd, optional, body):
     i = len(reqd)
     ret = {}
+    ret['error'] = None
 
     i -= 1
     while i >= 0:
         temp = reqd[i]
+
         if not temp in body or type(body[temp]) == object:
-            return str(temp) + ' is missing'
+            ret['error'] = str(temp) + ' is missing'
+            return ret
+
         ret[temp] = body[temp]
         i -= 1
 
@@ -29,11 +36,14 @@ def get_data(reqd, optional, body):
     i -= 1
     while i >= 0:
         temp = optional[i]
+
         if temp in body:
             ret[temp] = body[temp]
+
         i -= 1
 
     return ret
+
 
 def random_string(i):
     possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -47,8 +57,10 @@ def random_string(i):
 
     return string
 
+
 def generate_UUID():
     return uuid.uuid4()
+
 
 def unique_short_string(n):
     result = ''
@@ -60,25 +72,31 @@ def unique_short_string(n):
 
     return result.replace('.', '')[0:n]
 
+
 def pad(num, size):
     return ('000000000' + str(num))[-(size or 2):]
+
 
 def to_title_case(string):
     if string:
         return ' '.join(string.split()).title()
+
     return False
+
 
 def caps_first(string):
     return string[0].upper() + string[1:]
 
+
 def clean_string(string):
     return ' '.join(string.split())
+
 
 def split(a, n):
     length = len(a)
     out = []
-    i = 0
 
+    i = 0
     while i < length:
         temp = i
         i += int(math.ceil((length - i) / float(n)))
@@ -87,12 +105,13 @@ def split(a, n):
 
     return out
 
+
 def slice(a, n):
     length = len(a)
     out = []
     number_of_slice = int(math.ceil(length / float(n)))
-    i = 0
 
+    i = 0
     while number_of_slice > 0:
         a = a[i:n]
         out.append(a)
@@ -101,6 +120,7 @@ def slice(a, n):
 
     return out
 
+
 def extend(obj, source):
     for prop in source:
         if hasattr(source, prop):
@@ -108,8 +128,10 @@ def extend(obj, source):
 
     return obj
 
+
 def clone(obj):
     return json.loads(json.dumps(obj))
+
 
 def encode_params(params):
     params_encoded = []
@@ -120,20 +142,24 @@ def encode_params(params):
 
     return '&'.join(params_encoded)
 
+
 def nida():
     return hash(SALT + hash(datetime.datetime.now()))
+
 
 def mida(access_token):
     return hash(SALT + hash(access_token))
 
-def has_scopes(mida, scope):
-    db = database.make_engine(config['MYSQL_MUSIC'])
+
+def has_scopes(mida, *scopes):
+    db = database.make_engine(app.config['MYSQL_MUSIC'])
 
     params = {
-        'mida'  : mida,
-        'scope' : scope
+        'mida'      : mida,
+        'scopes'    : scopes
     }
 
-    data = database.get(db, 'SELECT * FROM user_scopes WHERE mida = :mida AND scope = :scope', params)
+    data = database.get(db, 'SELECT * FROM user_scopes WHERE mida = :mida AND scope IN :scopes', params)
 
-    return data
+    return data if len(data) == len(scopes) else None
+

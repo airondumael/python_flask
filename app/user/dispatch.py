@@ -5,7 +5,7 @@ from flask import request
 from flask import Blueprint
 
 # Import app-based dependencies
-from app import user
+from app import auth, user
 from util import utils
 
 # Import core libraries
@@ -22,29 +22,54 @@ mod_user = Blueprint('user', __name__)
 @check_tokens
 @make_response
 def get_user(res):
+    if not utils.has_scopes(request.headers.get('mida'), 'user.info'):
+        return res.redirect(frontend_error_url='/',
+            params={'error' : 'You do not have permission to do this action'})
+
     params = {
         'user_id' : request.user_id
     }
 
-    if utils.has_scopes(request.headers.get('mida'), 'user.info'):
-        return res.send(user.get_user(params)[0])
-
-    else:
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+    return res.send(user.get_user(params)[0])
 
 
 @mod_user.route('/', methods=['POST'])
 @check_tokens
 @make_response
 def edit_user(res):
-    params = {
-        'user_id'   : request.user_id,
-        'active'    : request.form['active'],
-        'rank'      : request.form['rank']
-    }
+    if not utils.has_scopes(request.headers.get('mida'), 'user.info'):
+        return res.redirect(frontend_error_url='/',
+            params={'error' : 'You do not have permission to do this action'})
+
+    params = utils.get_data(['active', 'rank', 'genre', 'mood', 'instrument'], {}, request.values)
+
+    if params['error']:
+        return res.redirect(frontend_error_url='/', params=params)
+
+    params['user_id'] = request.user_id
 
     user.edit_user(params)
+    user.edit_preference(params)
 
-    return res.send(params)
+    return res.send(user.get_user(params)[0])
+
+
+@mod_user.route('/<user_id>', methods=['DELETE'])
+@check_tokens
+@make_response
+def delete_user(res, user_id):
+    if not utils.has_scopes(request.headers.get('mida'), 'user.delete'):
+        return res.redirect(frontend_error_url='/',
+            params={'error' : 'You do not have permission to do this action'})
+
+    params = {
+        'user_id' : user_id
+    }
+
+    user.delete_user(params)
+
+    auth.remove_scopes(params)
+    auth.remove_session(params)
+
+    return res.send('User deleted')
 

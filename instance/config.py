@@ -30,5 +30,8 @@ ALLOWED_HEADERS = ['mida', 'Access-Token', 'nida']
 ALLOWED_ORIGINS = '*'
 ALLOWED_METHODS = ['GET', 'HEAD', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
 
+# Tracks
+TRACKS_FIELDS = ['title', 'artist', 'album', 'genre', 'mood', 'instrument', 'lyrics', 'country']
+
 
 print " * Loading config for " + APP_NAME
