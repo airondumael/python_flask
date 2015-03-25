@@ -7,18 +7,6 @@ from lib import database
 db = app.db
 
 
-def add_scopes(_params):
-    scopes = _params['scopes']
-    query = 'INSERT INTO user_scopes VALUES '
-
-    for scope in scopes:
-        query += '(:user_id, :mida, \'' + scope + '\'),'
-
-    data = database.query(db.music_db, query[:-1], _params)
-
-    return data
-
-
 def add_session(_params):
     data = database.query(db.music_db, 'INSERT INTO session VALUES(:user_id, :mida)', _params)
 

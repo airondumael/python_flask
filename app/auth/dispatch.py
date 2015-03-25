@@ -52,6 +52,7 @@ def freedom_callback(res):
         'user_id'   : utils.generate_UUID(),
         'email'     : data['email'],
         'scopes'    : ['user.info', 'music.list'],
+        'role'      : 'user',
         'mida'      : utils.mida(access_token)
     }
 
@@ -59,15 +60,12 @@ def freedom_callback(res):
 
     if user_data:
         params['user_id'] = user_data[0]['user_id']
-     
-        if user_data[0]['role'] == 'admin':
-            params['scopes'].append('user.delete')
 
     else:
         user.add_user(params)
         user.add_preference(params)
-    
-    auth.add_scopes(params)
+        user.add_scopes(params)
+
     auth.add_session(params)
 
     return res.redirect(frontend_url=config['FRONTEND_LOGIN_CALLBACK_URL'], params={'mida' : params['mida']})
@@ -79,7 +77,7 @@ def freedom_callback(res):
 @make_response
 def logout(res):
     headers = {
-        'Access-Token' : request.headers.get('access_token')
+        'Access-Token' : request.headers.get('Access-Token')
     }
 
     response = curl.post(config['FACCOUNTS_URL'] + '/auth/logout', headers=headers)
@@ -88,8 +86,7 @@ def logout(res):
         'user_id' : request.user_id
     }
 
-    auth.remove_scopes(params)
     auth.remove_session(params)
 
-    return res.redirect(frontend_url='/')
+    return res.send('Logout successful')
 

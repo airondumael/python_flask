@@ -10,6 +10,7 @@ from util import utils
 
 # Import core libraries
 from lib.decorators import check_tokens, make_response
+from lib.error_handler import FailedRequest
 
 # Other imports
 from werkzeug import secure_filename
@@ -25,6 +26,9 @@ mod_track = Blueprint('track', __name__)
 @check_tokens
 @make_response
 def get_track_info(res, track_id):
+    if not utils.has_scopes(request.user_id, 'music.list'):
+        raise FailedRequest('You do not have permission to do this action')
+
     params = {
         'track_id' : track_id
     }
@@ -36,14 +40,13 @@ def get_track_info(res, track_id):
 @check_tokens
 @make_response
 def edit_track_info(res, track_id):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.edit'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+    if not utils.has_scopes(request.user_id, 'music.meta'):
+        raise FailedRequest('You do not have permission to do this action')
 
     params = utils.get_data(app.config['TRACKS_FIELDS'], {}, request.values)
 
     if params['error']:
-        return res.redirect(frontend_error_url='/', params=params)
+        raise FailedRequest(params['error'])
 
     params['track_id'] = track_id
 
@@ -56,9 +59,8 @@ def edit_track_info(res, track_id):
 @check_tokens
 @make_response
 def delete_track(res, track_id):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.delete'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+    if not utils.has_scopes(request.user_id, 'music.delete'):
+        raise FailedRequest('You do not have permission to do this action')
 
     params = {
         'track_id' : track_id
@@ -80,7 +82,7 @@ def delete_track(res, track_id):
 #     data = track.get_track_info(params)
 
 #     if not data:
-#         return res.redirect(frontend_error_url='/', params={'error' : 'Track does not exist'})
+#         raise FailedRequest(params['error'])
 
 #     return res.send('s3.amazonaws.com/music.tm/' + data[0]['filename'])
 
@@ -89,9 +91,8 @@ def delete_track(res, track_id):
 @check_tokens
 @make_response
 def get_recommended_tracks(res):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.list', 'user.info'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+    if not utils.has_scopes(request.user_id, 'music.list', 'user.info'):
+        raise FailedRequest('You do not have permission to do this action')
 
     params = {
         'user_id' : request.user_id
@@ -108,13 +109,17 @@ def get_recommended_tracks(res):
     return res.send(track.get_recommended_tracks(params))
 
 
+@mod_track.route('/search', methods=['GET'])
+def search():
+    raise FailedRequest('The Monkey Ninja cannot find your request')
+
+
 @mod_track.route('/search/<query>', methods=['GET'])
-@check_tokens
+# @check_tokens
 @make_response
 def search_tracks(res, query):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.list'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+    # if not utils.has_scopes(request.user_id, 'music.list'):
+    #     raise FailedRequest('You do not have permission to do this action')
 
     params = {
         'query' : query
@@ -127,17 +132,17 @@ def search_tracks(res, query):
 @check_tokens
 @make_response
 def upload_track(res):
-    if not utils.has_scopes(request.headers.get('mida'), 'music.add'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+    if not utils.has_scopes(request.user_id, 'music.add'):
+        raise FailedRequest('You do not have permission to do this action')
 
-    messages = []
+    result = []
 
     files = request.files.getlist('file[]')
 
     for file in files:
         filename = secure_filename(file.filename)
 
+        params = {}
         message = 'Uploading ' + filename
 
         if file and track.allowed_file(file.filename):
@@ -155,7 +160,10 @@ def upload_track(res):
         else:
             message += ' failed'
 
-        messages.append(message)
+        params.pop('file', None)
+        params['message'] = message
 
-    return res.send(messages)
+        result.append(params)
+
+    return res.send(result)
 
