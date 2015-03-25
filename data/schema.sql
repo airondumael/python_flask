@@ -76,11 +76,21 @@ CREATE TABLE `music_provider_managers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+-- CREATE TABLE `albums` (
+--     `album_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
+--     `name` varchar(1000) COLLATE utf8_unicode_ci,
+--     `artist` varchar(1000) COLLATE utf8_unicode_ci,
+--     `cover` blob,
+--     PRIMARY KEY (`album_id`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
 CREATE TABLE `tracks` (
     `track_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
     `title` varchar(1000) COLLATE utf8_unicode_ci,
     `artist` varchar(1000) COLLATE utf8_unicode_ci,
     `album` varchar(1000) COLLATE utf8_unicode_ci,
+    `album_cover` varchar(1000) COLLATE utf8_unicode_ci,
     `genre` varchar(1000) COLLATE utf8_unicode_ci,
     `mood` varchar(1000) COLLATE utf8_unicode_ci,
     `instrument` varchar(1000) COLLATE utf8_unicode_ci,

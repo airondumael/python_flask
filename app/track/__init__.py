@@ -11,6 +11,7 @@ import boto
 db = app.db
 
 ALLOWED_EXTENSIONS = set(['zip', 'mp3'])
+IMAGE_EXTENSIONS = set(['jpg', 'png'])
 
 s3 = boto.connect_s3()
 bucket = s3.get_bucket('music.tm')
@@ -33,8 +34,9 @@ def delete_track(_params):
 
 
 def edit_track_info(_params):
-    data = database.query(db.music_db, 'UPDATE tracks SET title = :title, artist = :artist, album = :album, genre = :genre, \
-        mood = :mood, instrument = :instrument, lyrics = :lyrics, country = :country WHERE track_id = :track_id', _params)
+    data = database.query(db.music_db, 'UPDATE tracks SET title = :title, artist = :artist, \
+        album = :album, album_cover = :album_cover, genre = :genre, mood = :mood, instrument = :instrument, \
+        lyrics = :lyrics, country = :country WHERE track_id = :track_id', _params)
 
     return data
 
@@ -63,6 +65,10 @@ def get_uncategorized_tracks():
     return data
 
 
+def is_image(_filename):
+    return '.' in _filename and _filename.rsplit('.', 1)[1] in IMAGE_EXTENSIONS
+
+
 def search_tracks(_params):
     _params['query'] = '%' + _params['query'] + '%'
     result = {}
@@ -80,6 +86,12 @@ def search_tracks(_params):
     result['genre'] = data
 
     return result
+
+
+def upload_album_cover(_params):
+    key = bucket.new_key('album_covers/' + _params['filename'])
+
+    key.set_contents_from_file(_params['file'], policy='public-read')
 
 
 def upload_track(_params):

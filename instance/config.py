@@ -43,7 +43,10 @@ USERS_FIELDS = ['active', 'rank', 'genre', 'mood', 'instrument']
 MUSIC_PROVIDERS_FIELDS = ['name', 'description', 'owner_id', 'image', 'logo', 'banner', 'website', 'email', 'contact_numbers']
 
 # Tracks
-TRACKS_FIELDS = ['title', 'artist', 'album', 'genre', 'mood', 'instrument', 'lyrics', 'country']
+TRACKS_FIELDS = ['title', 'artist', 'album', 'album_cover', 'genre', 'mood', 'instrument', 'lyrics', 'country']
+
+# S3 URL
+S3_URL = 'http://s3.amazonaws.com/music.tm'
 
 
 print " * Loading config for " + APP_NAME

@@ -50,6 +50,18 @@ def edit_track_info(res, track_id):
 
     params['track_id'] = track_id
 
+    if request.files:
+        album_cover = request.files['file']
+
+        if album_cover and track.is_image(album_cover.filename):
+            upload_params = {
+                'file'      : album_cover,
+                'filename'  : secure_filename(album_cover.filename)
+            }
+            params['album_cover'] = app.config['S3_URL'] + '/album_covers/' + upload_params['filename']
+
+            track.upload_album_cover(upload_params)
+
     track.edit_track_info(params)
 
     return res.send(track.get_track_info(params))
