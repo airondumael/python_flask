@@ -10,6 +10,7 @@ from util import utils
 
 # Import core libraries
 from lib.decorators import check_tokens, make_response
+from lib.error_handler import FailedRequest
 
 
 # Define the blueprint: 'user', set its url prefix: app.url/user
@@ -23,8 +24,7 @@ mod_user = Blueprint('user', __name__)
 @make_response
 def get_user(res):
     if not utils.has_scopes(request.user_id, 'user.info'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+        raise FailedRequest('You do not have permission to do this action')
 
     params = {
         'user_id' : request.user_id
@@ -38,8 +38,7 @@ def get_user(res):
 @make_response
 def get_all_users(res):
     if not utils.has_scopes(request.user_id, 'user.view_all'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+        raise FailedRequest('You do not have permission to do this action')
 
     return res.send(user.get_all_users())
 
@@ -49,13 +48,12 @@ def get_all_users(res):
 @make_response
 def edit_user(res):
     if not utils.has_scopes(request.user_id, 'user.info'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+        raise FailedRequest('You do not have permission to do this action')
 
     params = utils.get_data(app.config['USERS_FIELDS'], {}, request.values)
 
     if params['error']:
-        return res.send({'error' : params['error']})
+        raise FailedRequest(params['error'])
 
     params['user_id'] = request.user_id
 
@@ -70,8 +68,7 @@ def edit_user(res):
 @make_response
 def delete_user(res, user_id):
     if not utils.has_scopes(request.user_id, 'user.delete'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+        raise FailedRequest('You do not have permission to do this action')
 
     params = {
         'user_id' : user_id

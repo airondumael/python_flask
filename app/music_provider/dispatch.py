@@ -10,6 +10,7 @@ from util import utils
 
 # Import core libraries
 from lib.decorators import check_tokens, make_response
+from lib.error_handler import FailedRequest
 
 # Other imports
 import datetime
@@ -26,8 +27,7 @@ mod_music_provider = Blueprint('music_provider', __name__)
 @make_response
 def get_user_music_providers(res):
     if not utils.has_scopes(request.user_id, 'music_provider.list'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+        raise FailedRequest('You do not have permission to do this action')
 
     params = {
         'user_id' : request.user_id
@@ -41,13 +41,12 @@ def get_user_music_providers(res):
 @make_response
 def add_music_provider(res):
     if not utils.has_scopes(request.user_id, 'music_provider.add'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+        raise FailedRequest('You do not have permission to do this action')
 
     params = utils.get_data(app.config['MUSIC_PROVIDERS_FIELDS'], {}, request.values)
 
     if params['error']:
-        return res.send({'error' : params['error']})
+        raise FailedRequest(params['error'])
 
     params['id'] = utils.generate_UUID()
     params['date_created'] = datetime.datetime.now()
@@ -66,13 +65,12 @@ def add_music_provider(res):
 @make_response
 def add_music_provider_manager(res):
     if not utils.has_scopes(request.user_id, 'music_provider_manager.add'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+        raise FailedRequest('You do not have permission to do this action')
 
     params = utils.get_data(['email', 'music_provider_id'], {}, request.values)
 
     if params['error']:
-        return res.send({'error' : params['error']})
+        raise FailedRequest(params['error'])
 
     params['user_id'] = request.user_id
 

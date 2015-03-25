@@ -88,5 +88,5 @@ def logout(res):
 
     auth.remove_session(params)
 
-    return res.redirect(frontend_url='/')
+    return res.send('Logout successful')
 

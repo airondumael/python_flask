@@ -10,6 +10,7 @@ from util import utils
 
 # Import core libraries
 from lib.decorators import check_tokens, make_response
+from lib.error_handler import FailedRequest
 
 # Other imports
 from werkzeug import secure_filename
@@ -26,8 +27,7 @@ mod_track = Blueprint('track', __name__)
 @make_response
 def get_track_info(res, track_id):
     if not utils.has_scopes(request.user_id, 'music.list'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+        raise FailedRequest('You do not have permission to do this action')
 
     params = {
         'track_id' : track_id
@@ -41,13 +41,12 @@ def get_track_info(res, track_id):
 @make_response
 def edit_track_info(res, track_id):
     if not utils.has_scopes(request.user_id, 'music.meta'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+        raise FailedRequest('You do not have permission to do this action')
 
     params = utils.get_data(app.config['TRACKS_FIELDS'], {}, request.values)
 
     if params['error']:
-        return res.send({'error' : params['error']})
+        raise FailedRequest(params['error'])
 
     params['track_id'] = track_id
 
@@ -61,8 +60,7 @@ def edit_track_info(res, track_id):
 @make_response
 def delete_track(res, track_id):
     if not utils.has_scopes(request.user_id, 'music.delete'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+        raise FailedRequest('You do not have permission to do this action')
 
     params = {
         'track_id' : track_id
@@ -84,7 +82,7 @@ def delete_track(res, track_id):
 #     data = track.get_track_info(params)
 
 #     if not data:
-#         return res.send({'error' : 'Track does not exist'})
+#         raise FailedRequest(params['error'])
 
 #     return res.send('s3.amazonaws.com/music.tm/' + data[0]['filename'])
 
@@ -94,8 +92,7 @@ def delete_track(res, track_id):
 @make_response
 def get_recommended_tracks(res):
     if not utils.has_scopes(request.user_id, 'music.list', 'user.info'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+        raise FailedRequest('You do not have permission to do this action')
 
     params = {
         'user_id' : request.user_id
@@ -112,13 +109,17 @@ def get_recommended_tracks(res):
     return res.send(track.get_recommended_tracks(params))
 
 
+@mod_track.route('/search', methods=['GET'])
+def search():
+    raise FailedRequest('The Monkey Ninja cannot find your request')
+
+
 @mod_track.route('/search/<query>', methods=['GET'])
 # @check_tokens
 @make_response
 def search_tracks(res, query):
     # if not utils.has_scopes(request.user_id, 'music.list'):
-    #     return res.redirect(frontend_error_url='/',
-    #         params={'error' : 'You do not have permission to do this action'})
+    #     raise FailedRequest('You do not have permission to do this action')
 
     params = {
         'query' : query
@@ -132,8 +133,7 @@ def search_tracks(res, query):
 @make_response
 def upload_track(res):
     if not utils.has_scopes(request.user_id, 'music.add'):
-        return res.redirect(frontend_error_url='/',
-            params={'error' : 'You do not have permission to do this action'})
+        raise FailedRequest('You do not have permission to do this action')
 
     result = []
 
