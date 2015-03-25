@@ -33,7 +33,7 @@ def get_track_info(res, track_id):
         'track_id' : track_id
     }
 
-    return res.send(track.get_track_info(params)[0])
+    return res.send(track.get_track_info(params))
 
 
 @mod_track.route('/<track_id>', methods=['POST'])
@@ -52,7 +52,7 @@ def edit_track_info(res, track_id):
 
     track.edit_track_info(params)
 
-    return res.send(track.get_track_info(params)[0])
+    return res.send(track.get_track_info(params))
 
 
 @mod_track.route('/<track_id>', methods=['DELETE'])
@@ -118,7 +118,7 @@ def search_tracks(res, query=None):
     #     raise FailedRequest('You do not have permission to do this action')
 
     if not query:
-        raise FailedRequest('The Monkey Ninja cannot find your request')
+        raise FailedRequest('No results found')
 
     params = {
         'query' : query
