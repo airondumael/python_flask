@@ -56,6 +56,13 @@ def get_track_info(_params):
     return data
 
 
+def get_uncategorized_tracks():
+    data = database.get(db.music_db, 'SELECT * FROM tracks WHERE title = "" OR artist = "" OR \
+        album = "" OR genre = "" OR mood = "" OR instrument = "" ORDER BY artist, album', {})
+
+    return data
+
+
 def search_tracks(_params):
     _params['query'] = '%' + _params['query'] + '%'
     result = {}
