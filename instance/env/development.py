@@ -25,7 +25,7 @@ MYSQL_MUSIC = {
     'host'      : 'localhost',
     'db'        : 'music_tm',
     'user'      : 'root',
-    'password'  : '',
+    'password'  : 'qweASDzxc1234',
     'port'      : 3306
 }
 
