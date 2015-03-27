@@ -42,7 +42,7 @@ def get_all_users(res):
 
     result = user.get_all_users()
 
-    if len(result) == 0:
+    if not result:
         raise FailedRequest('No results found')
 
     return res.send(result)

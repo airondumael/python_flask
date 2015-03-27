@@ -36,7 +36,7 @@ def get_track_info(res, track_id):
 
     result = track.get_track_info(params)
 
-    if len(result) == 0:
+    if not result:
         raise FailedRequest('Invalid track_id')
 
     return res.send(result)
@@ -74,7 +74,7 @@ def edit_track_info(res, track_id):
 
     result = track.get_track_info(params)
 
-    if len(result) == 0:
+    if not result:
         raise FailedRequest('Invalid track_id')
 
     return res.send(result)
@@ -106,7 +106,7 @@ def delete_track(res, track_id):
 
 #     result = track.get_track_info(params)
 
-#     if len(result) == 0:
+#     if not result:
 #         raise FailedRequest('Invalid track_id')
 
 #     return res.send('s3.amazonaws.com/music.tm/' + result[0]['filename'])
@@ -133,7 +133,7 @@ def get_recommended_tracks(res):
 
     result = track.get_recommended_tracks(params)
 
-    if len(result) == 0:
+    if not result:
         raise FailedRequest('No results found')
 
     return res.send(result)
@@ -166,7 +166,7 @@ def get_uncategorized_tracks(res):
 
     result = track.get_uncategorized_tracks()
 
-    if len(result) == 0:
+    if not result:
         raise FailedRequest('No results found')
 
     return res.send(result)

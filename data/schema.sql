@@ -64,6 +64,7 @@ CREATE TABLE `music_providers` (
     `website` varchar(100) COLLATE utf8_unicode_ci,
     `email` varchar(37) COLLATE utf8_unicode_ci,
     `contact_numbers` varchar(100) COLLATE utf8_unicode_ci,
+    `url` varchar(100) COLLATE utf8_unicode_ci,
     `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `date_updated` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)

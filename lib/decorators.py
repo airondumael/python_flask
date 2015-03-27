@@ -37,6 +37,7 @@ def check_tokens(func):
 
             if data and utils.mida(access_token) == mida:
                 request.user_id = data[0]['user_id']
+                request.music_provider_id = request.cookies.get('music_provider_id')
 
                 return func(*args, **kw)
 
