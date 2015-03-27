@@ -60,7 +60,7 @@ def get_track_info(_params):
 
 def get_uncategorized_tracks():
     data = database.get(db.music_db, 'SELECT * FROM tracks WHERE title IS NULL OR artist IS NULL OR \
-        album IS NULL OR genre IS NULL OR mood IS NULL OR instrument IS NULL ORDER BY artist, album', {})
+        album IS NULL OR genre IS NULL OR mood IS NULL OR instrument IS NULL ORDER BY artist, album, title', {})
 
     return data
 
