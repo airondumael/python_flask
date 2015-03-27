@@ -33,7 +33,7 @@ def get_track_info(res, track_id):
         'track_id' : track_id
     }
 
-    return res.send(track.get_track_info(params)[0])
+    return res.send(track.get_track_info(params))
 
 
 @mod_track.route('/<track_id>', methods=['POST'])
@@ -52,7 +52,7 @@ def edit_track_info(res, track_id):
 
     track.edit_track_info(params)
 
-    return res.send(track.get_track_info(params)[0])
+    return res.send(track.get_track_info(params))
 
 
 @mod_track.route('/<track_id>', methods=['DELETE'])
@@ -110,22 +110,31 @@ def get_recommended_tracks(res):
 
 
 @mod_track.route('/search', methods=['GET'])
-def search():
-    raise FailedRequest('The Monkey Ninja cannot find your request')
-
-
 @mod_track.route('/search/<query>', methods=['GET'])
 # @check_tokens
 @make_response
-def search_tracks(res, query):
+def search_tracks(res, query=None):
     # if not utils.has_scopes(request.user_id, 'music.list'):
     #     raise FailedRequest('You do not have permission to do this action')
+
+    if not query:
+        raise FailedRequest('No results found')
 
     params = {
         'query' : query
     }
 
     return res.send(track.search_tracks(params))
+
+
+@mod_track.route('/uncategorized', methods=['GET'])
+@check_tokens
+@make_response
+def get_uncategorized_tracks(res):
+    if not utils.has_scopes(request.user_id, 'music.meta', 'music.list'):
+        raise FailedRequest('You do not have permission to do this action')
+
+    return res.send(track.get_uncategorized_tracks())
 
 
 @mod_track.route('/upload', methods=['POST'])
