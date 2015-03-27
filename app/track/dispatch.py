@@ -156,9 +156,12 @@ def upload_track(res):
     if not utils.has_scopes(request.user_id, 'music.add'):
         raise FailedRequest('You do not have permission to do this action')
 
-    result = []
-
     files = request.files.getlist('file[]')
+
+    if len(files) == 0:
+        raise FailedRequest('No file/s selected')
+
+    result = []
 
     for file in files:
         filename = secure_filename(file.filename)
@@ -179,7 +182,7 @@ def upload_track(res):
             message += ' success'
 
         else:
-            message += ' failed'
+            message += ' failed. File not allowed.'
 
         params.pop('file', None)
         params['message'] = message
