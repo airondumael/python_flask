@@ -97,6 +97,8 @@ CREATE TABLE `tracks` (
     `lyrics` text(1000000) COLLATE utf8_unicode_ci,
     `country` varchar(50) COLLATE utf8_unicode_ci,
     `filename` varchar(50) COLLATE utf8_unicode_ci,
+    `s3_filename` varchar(50) COLLATE utf8_unicode_ci,
+    `uploaded` tinyint(1) DEFAULT 0,
     `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `date_updated` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`track_id`),

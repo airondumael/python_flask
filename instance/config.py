@@ -26,7 +26,7 @@ SECRET_KEY = "3c135fcaca9a1f1108132c9453f547cb"
 FACCOUNTS_URL = 'http://api.accounts.freedom.tm:80'
 
 # CORS
-ALLOWED_HEADERS = ['mida', 'Access-Token', 'nida']
+ALLOWED_HEADERS = ['mida', 'Access-Token', 'nida', 'Content-Type']
 ALLOWED_ORIGINS = '*'
 ALLOWED_METHODS = ['GET', 'HEAD', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
 
@@ -43,7 +43,7 @@ USERS_FIELDS = ['active', 'rank', 'genre', 'mood', 'instrument']
 MUSIC_PROVIDERS_FIELDS = ['name', 'description', 'owner_id', 'image', 'logo', 'banner', 'website', 'email', 'contact_numbers']
 
 # Tracks
-TRACKS_FIELDS = ['title', 'artist', 'album', 'album_cover', 'genre', 'mood', 'instrument', 'lyrics', 'country']
+TRACKS_FIELDS = ['title', 'artist', 'album', 'genre', 'mood', 'instrument', 'lyrics', 'country']
 
 # S3 URL
 S3_URL = 'http://s3.amazonaws.com/music.tm'

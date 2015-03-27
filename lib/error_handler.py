@@ -6,7 +6,7 @@ from flask import Blueprint
 
 
 class FailedRequest(Exception):
-    status_code = 404
+    status_code = 400
 
     def __init__(self, message, status_code=None, payload=None):
         Exception.__init__(self)
