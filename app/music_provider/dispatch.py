@@ -33,7 +33,12 @@ def get_user_music_providers(res):
         'user_id' : request.user_id
     }
 
-    return res.send(music_provider.get_user_music_providers(params))
+    result = music_provider.get_user_music_providers(params)
+
+    if len(result) == 0:
+        raise FailedRequest('No results found')
+
+    return res.send(result)
 
 
 @mod_music_provider.route('/', methods=['POST'])

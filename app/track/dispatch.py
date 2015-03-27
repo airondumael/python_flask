@@ -33,7 +33,12 @@ def get_track_info(res, track_id):
         'track_id' : track_id
     }
 
-    return res.send(track.get_track_info(params))
+    result = track.get_track_info(params)
+
+    if len(result) == 0:
+        raise FailedRequest('Invalid track_id')
+
+    return res.send(result)
 
 
 @mod_track.route('/<track_id>', methods=['POST'])
@@ -64,7 +69,12 @@ def edit_track_info(res, track_id):
 
     track.edit_track_info(params)
 
-    return res.send(track.get_track_info(params))
+    result = track.get_track_info(params)
+
+    if len(result) == 0:
+        raise FailedRequest('Invalid track_id')
+
+    return res.send(result)
 
 
 @mod_track.route('/<track_id>', methods=['DELETE'])
@@ -91,12 +101,12 @@ def delete_track(res, track_id):
 #         'track_id' : track_id
 #     }
 
-#     data = track.get_track_info(params)
+#     result = track.get_track_info(params)
 
-#     if not data:
-#         raise FailedRequest(params['error'])
+#     if len(result) == 0:
+#         raise FailedRequest('Invalid track_id')
 
-#     return res.send('s3.amazonaws.com/music.tm/' + data[0]['filename'])
+#     return res.send('s3.amazonaws.com/music.tm/' + result[0]['filename'])
 
 
 @mod_track.route('/recommended', methods=['GET'])
@@ -118,7 +128,12 @@ def get_recommended_tracks(res):
         'instrument'    : data['instrument']
     }
 
-    return res.send(track.get_recommended_tracks(params))
+    result = track.get_recommended_tracks(params)
+
+    if len(result) == 0:
+        raise FailedRequest('No results found')
+
+    return res.send(result)
 
 
 @mod_track.route('/search', methods=['GET'])
@@ -146,7 +161,12 @@ def get_uncategorized_tracks(res):
     if not utils.has_scopes(request.user_id, 'music.meta', 'music.list'):
         raise FailedRequest('You do not have permission to do this action')
 
-    return res.send(track.get_uncategorized_tracks())
+    result = track.get_uncategorized_tracks()
+
+    if len(result) == 0:
+        raise FailedRequest('No results found')
+
+    return res.send(result)
 
 
 @mod_track.route('/upload', methods=['POST'])
