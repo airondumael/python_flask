@@ -25,7 +25,8 @@ CREATE TABLE `users` (
 
 CREATE TABLE `user_scopes` (
     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
-    `scope` varchar(200) COLLATE utf8_unicode_ci
+    `scope` varchar(200) COLLATE utf8_unicode_ci,
+    CONSTRAINT `user_id_scope` UNIQUE (`user_id`, `scope`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -35,13 +36,15 @@ CREATE TABLE `user_preferences` (
     `mood` varchar(50) COLLATE utf8_unicode_ci,
     `instrument` varchar(50) COLLATE utf8_unicode_ci,
     `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `date_updated` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+    `date_updated` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 CREATE TABLE `session` (
     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
-    `mida` varchar(50) COLLATE utf8_unicode_ci
+    `mida` varchar(50) COLLATE utf8_unicode_ci,
+    CONSTRAINT `user_id_mida` UNIQUE (`user_id`, `mida`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -73,7 +76,8 @@ CREATE TABLE `music_providers` (
 
 CREATE TABLE `music_provider_managers` (
     `user_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
-    `music_provider_id` varchar(37) COLLATE utf8_unicode_ci
+    `music_provider_id` varchar(37) COLLATE utf8_unicode_ci,
+    CONSTRAINT `user_id_music_provider_id` UNIQUE (`user_id`, `music_provider_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 

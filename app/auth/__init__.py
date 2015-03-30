@@ -8,7 +8,7 @@ db = app.db
 
 
 def add_session(_params):
-    data = database.query(db.music_db, 'INSERT INTO session VALUES(:user_id, :mida)', _params)
+    data = database.query(db.music_db, 'INSERT IGNORE INTO session VALUES(:user_id, :mida)', _params)
 
     return data
 

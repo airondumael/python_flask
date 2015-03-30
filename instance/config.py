@@ -30,20 +30,13 @@ ALLOWED_HEADERS = ['mida', 'Access-Token', 'nida', 'Content-Type']
 ALLOWED_ORIGINS = '*'
 ALLOWED_METHODS = ['GET', 'HEAD', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
 
-# Admin Scopes
-ADMIN_SCOPES = ['user.info', 'user.delete', 'music.list', 'music.add', 'music.delete', 'music.meta', 'music_provider.add']
-
-# Staff Scopes
-STAFF_SCOPES = ['user.info', 'music.list', 'music.add', 'music.meta']
-
-# User
-USERS_FIELDS = ['active', 'rank', 'genre', 'mood', 'instrument']
-
-# Music Providers
-MUSIC_PROVIDERS_FIELDS = ['name', 'description', 'owner_id', 'image', 'logo', 'banner', 'website', 'email', 'contact_numbers', 'url']
-
-# Tracks
-TRACKS_FIELDS = ['title', 'artist', 'album', 'genre', 'mood', 'instrument', 'lyrics', 'country']
+SCOPES = {
+    'admin'                     : ['self.info', 'user.info', 'user.delete', 'user.view_all', 'music.list', 'music.add', 'music.delete', 'music.meta', 'music_provider.add'],
+    'staff'                     : ['self.info', 'music.list', 'music.add', 'music.meta'],
+    'user'                      : ['self.info', 'music.list'],
+    'music_provider_owner'      : ['self.info', 'music.list', 'music.add', 'music.meta', 'music_provider.list', 'music_provider_manager.add'],
+    'music_provider_manager'    : ['self.info', 'music.list', 'music.add', 'music.meta']
+}
 
 # S3 URL
 S3_URL = 'http://s3.amazonaws.com/music.tm'

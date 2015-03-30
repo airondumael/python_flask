@@ -41,6 +41,9 @@ def query(_connection, _query, _params):
     data = _connection.execute(text(_query), _params)
     _connection.commit()
 
+    if data.rowcount == 0:
+        return None
+
     res['rows_affected'] = data.rowcount
     _connection.close()
 

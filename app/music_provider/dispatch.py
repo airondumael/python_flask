@@ -16,6 +16,9 @@ from lib.error_handler import FailedRequest
 import datetime
 
 
+# Get config
+config = app.config
+
 # Define the blueprint: 'music_provider', set its url prefix: app.url/music-provider
 mod_music_provider = Blueprint('music_provider', __name__)
 
@@ -48,7 +51,8 @@ def add_music_provider(res):
     if not utils.has_scopes(request.user_id, 'music_provider.add'):
         raise FailedRequest('You do not have permission to do this action')
 
-    params = utils.get_data(app.config['MUSIC_PROVIDERS_FIELDS'], {}, request.values)
+    params = utils.get_data(['name', 'description', 'owner_id', 'image', 'logo',
+        'banner', 'website', 'email', 'contact_numbers', 'url'], [], request.values)
 
     if params['error']:
         raise FailedRequest(params['error'])
@@ -56,7 +60,7 @@ def add_music_provider(res):
     params['id'] = utils.generate_UUID()
     params['date_created'] = datetime.datetime.now()
     params['user_id'] = params['owner_id']
-    params['scopes'] = ['music_provider.list', 'music_provider_manager.add']
+    params['scopes'] = config['SCOPES']['music_provider_owner']
 
     music_provider.add_music_provider(params)
 
@@ -72,22 +76,27 @@ def add_music_provider_manager(res):
     if not utils.has_scopes(request.user_id, 'music_provider_manager.add'):
         raise FailedRequest('You do not have permission to do this action')
 
-    params = utils.get_data(['email'], {}, request.values)
+    if not request.music_provider_id:
+        raise FailedRequest('Cookie music_provider_id is missing')
+
+    params = utils.get_data(['email'], [], request.values)
 
     if params['error']:
         raise FailedRequest(params['error'])
 
-    if not request.music_provider_id:
-        raise FailedRequest('Cookie music_provider_id is missing')
-
-    params['user_id'] = request.user_id
+    params['owner_id'] = request.user_id
     params['music_provider_id'] = request.music_provider_id
+    params['scopes'] = config['SCOPES']['music_provider_manager']
 
-    if music_provider.is_own_music_provider(params):
-        music_provider.add_music_provider_manager(params)
-
-    else:
+    if not music_provider.is_own_music_provider(params):
         raise FailedRequest('Invalid music_provider_id')
+
+    result = music_provider.add_music_provider_manager(params)
+
+    if not result:
+        raise FailedRequest('Invalid email')
+
+    user.add_scopes(params)
 
     return res.send(params)
 

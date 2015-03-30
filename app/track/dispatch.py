@@ -17,6 +17,9 @@ from werkzeug import secure_filename
 import datetime
 
 
+# Get config
+config = app.config
+
 # Define the blueprint: 'track', set its url prefix: app.url/track
 mod_track = Blueprint('track', __name__)
 
@@ -49,10 +52,8 @@ def edit_track_info(res, track_id):
     if not utils.has_scopes(request.user_id, 'music.meta'):
         raise FailedRequest('You do not have permission to do this action')
 
-    fields = app.config['TRACKS_FIELDS']
-    fields.append('album_cover')
-
-    params = utils.get_data(fields, {}, request.values)
+    params = utils.get_data(['title', 'artist', 'album', 'album_cover',
+        'genre', 'mood', 'instrument', 'lyrics', 'country'], [], request.values)
 
     if params['error']:
         raise FailedRequest(params['error'])
@@ -66,7 +67,7 @@ def edit_track_info(res, track_id):
             'image'             : album_cover,
             'image_filename'    : secure_filename(album_cover.filename)
         }
-        params['album_cover'] = app.config['S3_URL'] + '/album_covers/' + upload_params['image_filename']
+        params['album_cover'] = config['S3_URL'] + '/album_covers/' + upload_params['image_filename']
 
         track.upload_album_cover(upload_params)
 
@@ -179,7 +180,8 @@ def upload_track(res):
     if not utils.has_scopes(request.user_id, 'music.add', 'music.meta'):
         raise FailedRequest('You do not have permission to do this action')
 
-    params = utils.get_data(app.config['TRACKS_FIELDS'], {}, request.values)
+    params = utils.get_data(['title', 'artist', 'album', 'genre',
+        'mood', 'instrument', 'lyrics', 'country'], [], request.values)
 
     if params['error']:
             raise FailedRequest(params['error'])
@@ -190,43 +192,41 @@ def upload_track(res):
         raise FailedRequest('track is missing or no selected file')
 
     filename = secure_filename(file.filename)
-    s3_filename = track.generate_filename(filename)
 
-    if track.allowed_file(file.filename):
-        params['track_id'] = utils.generate_UUID()
-        params['album_cover'] = None
-        params['filename'] = filename
-        params['s3_filename'] = s3_filename
-        params['date_created'] = datetime.datetime.now()
-        params['track'] = file
+    if not track.allowed_file(file.filename):
+        raise FailedRequest('File not allowed')
 
-        album_cover = request.files.get('image')
+    params['track_id'] = utils.generate_UUID()
+    params['album_cover'] = None
+    params['filename'] = filename
+    params['s3_filename'] = track.generate_filename(filename)
+    params['date_created'] = datetime.datetime.now()
+    params['track'] = file
 
-        if not album_cover:
-            params['message'] = 'No album cover'
+    album_cover = request.files.get('image')
 
-        elif track.is_image(album_cover.filename):
-            upload_params = {
-                'image'             : album_cover,
-                'image_filename'    : secure_filename(album_cover.filename)
-            }
-            params['album_cover'] = app.config['S3_URL'] + '/album_covers/' + upload_params['image_filename']
+    if not album_cover:
+        params['message'] = 'No album cover'
 
-            track.upload_album_cover(upload_params)
+    elif track.is_image(album_cover.filename):
+        upload_params = {
+            'image'             : album_cover,
+            'image_filename'    : secure_filename(album_cover.filename)
+        }
+        params['album_cover'] = config['S3_URL'] + '/album_covers/' + upload_params['image_filename']
 
-        else:
-            params['message'] = 'Album cover not allowed'
-
-        # Disable upload to S3 for now
-        # TODO: Run upload in background
-        # track.upload_track(params)
-
-        track.add_track(params)
-
-        params.pop('track', None)
-
-        return res.send(params)
+        track.upload_album_cover(upload_params)
 
     else:
-        raise FailedRequest('File not allowed')
+        params['message'] = 'Album cover not allowed'
+
+    # Disable upload to S3 for now
+    # TODO: Run upload in background
+    # track.upload_track(params)
+
+    track.add_track(params)
+
+    params.pop('track', None)
+
+    return res.send(params)
 

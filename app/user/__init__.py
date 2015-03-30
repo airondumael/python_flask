@@ -15,10 +15,17 @@ def add_preference(_params):
 
 
 def add_scopes(_params):
-    scopes = _params['scopes']
-    query = 'INSERT INTO user_scopes VALUES '
+    if not _params['user_id']:
+        data = database.get(db.music_db, 'SELECT user_id FROM users WHERE email = :email', _params)
 
-    for scope in scopes:
+        if not data:
+            return data
+
+        _params['user_id'] = data[0]['user_id']
+
+    query = 'INSERT IGNORE INTO user_scopes VALUES '
+
+    for scope in _params['scopes']:
         query += '(:user_id, \'' + scope + '\'),'
 
     data = database.query(db.music_db, query[:-1], _params)
@@ -33,7 +40,7 @@ def add_user(_params):
 
 
 def delete_user(_params):
-    data = database.query(db.music_db, 'DELETE FROM users WHERE user_id = :user_id', _params)
+    data = database.query(db.music_db, 'UPDATE users SET active = 0 WHERE user_id = :user_id', _params)
 
     return data
 
@@ -55,8 +62,10 @@ def edit_user(_params):
     return data
 
 
-def get_all_users():
-    data = database.get(db.music_db, 'SELECT * FROM users', {})
+def get_all_users(_params):
+    _params['start'] = (_params['page'] - 1) * _params['entries']
+
+    data = database.get(db.music_db, 'SELECT * FROM users LIMIT :start, :entries', _params)
 
     return data
 

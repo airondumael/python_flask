@@ -20,27 +20,47 @@ mod_user = Blueprint('user', __name__)
 # Declare all the routes
 
 @mod_user.route('/', methods=['GET'])
+@mod_user.route('/<user_id>', methods=['GET'])
 @check_tokens
 @make_response
-def get_user(res):
-    if not utils.has_scopes(request.user_id, 'user.info'):
+def get_user(res, user_id=None):
+    if not user_id:
+        if not utils.has_scopes(request.user_id, 'self.info'):
+            raise FailedRequest('You do not have permission to do this action')
+
+        user_id = request.user_id
+
+    elif not utils.has_scopes(request.user_id, 'user.info'):
         raise FailedRequest('You do not have permission to do this action')
 
     params = {
-        'user_id' : request.user_id
+        'user_id' : user_id
     }
 
-    return res.send(user.get_user(params)[0])
+    result = user.get_user(params)
+
+    if not result:
+        raise FailedRequest('Invalid user_id')
+
+    return res.send(result[0])
 
 
-@mod_user.route('/all', methods=['GET'])
+@mod_user.route('/all/<page>', methods=['GET'])
 @check_tokens
 @make_response
-def get_all_users(res):
+def get_all_users(res, page):
     if not utils.has_scopes(request.user_id, 'user.view_all'):
         raise FailedRequest('You do not have permission to do this action')
 
-    result = user.get_all_users()
+    params = utils.get_data(['entries'], [], request.values)
+
+    if params['error']:
+        raise FailedRequest(params['error'])
+
+    params['page'] = int(page)
+    params['entries'] = int(params['entries'])
+
+    result = user.get_all_users(params)
 
     if not result:
         raise FailedRequest('No results found')
@@ -49,20 +69,31 @@ def get_all_users(res):
 
 
 @mod_user.route('/', methods=['POST'])
+@mod_user.route('/<user_id>', methods=['POST'])
 @check_tokens
 @make_response
-def edit_user(res):
-    if not utils.has_scopes(request.user_id, 'user.info'):
+def edit_user(res, user_id=None):
+    if not user_id:
+        if not utils.has_scopes(request.user_id, 'self.info'):
+            raise FailedRequest('You do not have permission to do this action')
+
+        user_id = request.user_id
+
+    elif not utils.has_scopes(request.user_id, 'user.info'):
         raise FailedRequest('You do not have permission to do this action')
 
-    params = utils.get_data(app.config['USERS_FIELDS'], {}, request.values)
+    params = utils.get_data(['active', 'rank', 'genre', 'mood', 'instrument'], [], request.values)
 
     if params['error']:
         raise FailedRequest(params['error'])
 
-    params['user_id'] = request.user_id
+    params['user_id'] = user_id
 
-    user.edit_user(params)
+    result = user.edit_user(params)
+
+    if not result:
+        raise FailedRequest('Invalid user_id')
+
     user.edit_preference(params)
 
     return res.send(user.get_user(params)[0])
@@ -79,10 +110,13 @@ def delete_user(res, user_id):
         'user_id' : user_id
     }
 
-    user.delete_user(params)
+    result = user.delete_user(params)
+
+    if not result:
+        raise FailedRequest('Invalid user_id')
 
     auth.remove_scopes(params)
     auth.remove_session(params)
 
-    return res.send('User deleted')
+    return res.send(user.get_user(params)[0])
 

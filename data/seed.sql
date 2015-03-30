@@ -10,7 +10,8 @@ INSERT INTO users(`user_id`, `email`, `role`) VALUES('g4f9c597-1407-4a07-9ca9-32
 TRUNCATE user_scopes;
 
 -- admin scopes
-INSERT INTO user_scopes VALUES  ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'user.info'),
+INSERT INTO user_scopes VALUES  ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'self.info'),
+                                ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'user.info'),
                                 ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'user.delete'),
                                 ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'user.view_all'),
                                 ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'music.list'),
@@ -19,8 +20,8 @@ INSERT INTO user_scopes VALUES  ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'user.i
                                 ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'music.meta'),
                                 ('f4f9c597-1407-4a07-9ca9-3213f1acba65', 'music_provider.add');
 
--- staff scopes
-INSERT INTO user_scopes VALUES  ('g4f9c597-1407-4a07-9ca9-3213f1acba65', 'user.info'),
+-- music_provider scopes
+INSERT INTO user_scopes VALUES  ('g4f9c597-1407-4a07-9ca9-3213f1acba65', 'self.info'),
                                 ('g4f9c597-1407-4a07-9ca9-3213f1acba65', 'music.list'),
                                 ('g4f9c597-1407-4a07-9ca9-3213f1acba65', 'music.add'),
                                 ('g4f9c597-1407-4a07-9ca9-3213f1acba65', 'music.meta');

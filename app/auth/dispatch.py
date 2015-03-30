@@ -15,6 +15,7 @@ from lib.error_handler import FailedRequest
 # Other imports
 import requests as curl
 
+
 # Get config
 config = app.config
 
@@ -51,7 +52,7 @@ def freedom_callback(res):
     params = {
         'user_id'   : utils.generate_UUID(),
         'email'     : data['email'],
-        'scopes'    : ['user.info', 'music.list'],
+        'scopes'    : config['SCOPES']['user'],
         'role'      : 'user',
         'mida'      : utils.mida(access_token)
     }
