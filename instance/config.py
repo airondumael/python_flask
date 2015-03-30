@@ -35,7 +35,7 @@ SCOPES = {
     'staff'                     : ['self.info', 'music.list', 'music.add', 'music.meta'],
     'user'                      : ['self.info', 'music.list'],
     'music_provider_owner'      : ['self.info', 'music.list', 'music.add', 'music.meta', 'music_provider.list', 'music_provider_manager.add'],
-    'music_provider_manager'    : ['self.info', 'music.list', 'music.add', 'music.meta']
+    'music_provider_manager'    : ['self.info', 'music.list', 'music.add', 'music.meta', 'music_provider.list']
 }
 
 # S3 URL

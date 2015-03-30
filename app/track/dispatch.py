@@ -92,7 +92,10 @@ def delete_track(res, track_id):
         'track_id' : track_id
     }
 
-    track.delete_track(params)
+    result = track.delete_track(params)
+
+    if not result:
+        raise FailedRequest('Invalid track_id')
 
     return res.send('Track deleted')
 

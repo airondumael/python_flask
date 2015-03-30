@@ -68,30 +68,43 @@ GET /auth
 GET /auth/logout
 
 GET /user
+GET /user/<user_id>
+
+GET /user/all/<page>
+'entries' - number of results per page
+
 POST /user
+'active', 'rank', 'genre', 'mood', 'instrument'
+
+POST /user/<user_id>
 'active', 'rank', 'genre', 'mood', 'instrument'
 
 DELETE /user/<user_id>
 
-POST /track/upload
-'track' - name of music track file to upload
-'title', 'artist', 'album', 'genre', 'mood', 'instrument', 'lyrics', 'country'
-'image' - name of image file to upload (optional)
-
 GET /track/<track_id>
+GET /track/recommended
+GET /track/search/<query>
+GET /track/uncategorized
 
-POST /track/<track_id> - edit track
+POST /track/<track_id>
 'title', 'artist', 'album', 'genre', 'mood', 'instrument', 'lyrics', 'country'
 'album_cover' - current album cover link, hidden input
-'image' - name of image file to upload (optional)
+'image' - image file to upload (optional)
+
+POST /track/upload
+'track' - music track file to upload
+'title', 'artist', 'album', 'genre', 'mood', 'instrument', 'lyrics', 'country'
+'image' - image file to upload (optional)
 
 DELETE /track/<track_id>
-GET /track/recommended
-GET /track/uncategorized
-GET /track/search/<query>
+
+GET /music-provider
 
 POST /music-provider
 'name', 'description', 'owner_id', 'image', 'logo', 'banner', 'website', 'email', 'contact_numbers', 'url'
+
+POST /music-provider/manager
+'email' - user email to be added as manager
 
 # genre, mood, and instrument have comma-separated values
 
