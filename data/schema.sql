@@ -64,6 +64,7 @@ CREATE TABLE `music_providers` (
     `website` varchar(100) COLLATE utf8_unicode_ci,
     `email` varchar(37) COLLATE utf8_unicode_ci,
     `contact_numbers` varchar(100) COLLATE utf8_unicode_ci,
+    `url` varchar(100) COLLATE utf8_unicode_ci,
     `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `date_updated` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
@@ -76,17 +77,29 @@ CREATE TABLE `music_provider_managers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+-- CREATE TABLE `albums` (
+--     `album_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
+--     `name` varchar(1000) COLLATE utf8_unicode_ci,
+--     `artist` varchar(1000) COLLATE utf8_unicode_ci,
+--     `cover` blob,
+--     PRIMARY KEY (`album_id`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
 CREATE TABLE `tracks` (
     `track_id` varchar(37) COLLATE utf8_unicode_ci NOT NULL,
     `title` varchar(1000) COLLATE utf8_unicode_ci,
     `artist` varchar(1000) COLLATE utf8_unicode_ci,
     `album` varchar(1000) COLLATE utf8_unicode_ci,
+    `album_cover` varchar(1000) COLLATE utf8_unicode_ci,
     `genre` varchar(1000) COLLATE utf8_unicode_ci,
     `mood` varchar(1000) COLLATE utf8_unicode_ci,
     `instrument` varchar(1000) COLLATE utf8_unicode_ci,
     `lyrics` text(1000000) COLLATE utf8_unicode_ci,
     `country` varchar(50) COLLATE utf8_unicode_ci,
     `filename` varchar(50) COLLATE utf8_unicode_ci,
+    `s3_filename` varchar(50) COLLATE utf8_unicode_ci,
+    `uploaded` tinyint(1) DEFAULT 0,
     `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `date_updated` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`track_id`),

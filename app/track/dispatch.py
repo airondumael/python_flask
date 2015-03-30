@@ -14,6 +14,7 @@ from lib.error_handler import FailedRequest
 
 # Other imports
 from werkzeug import secure_filename
+import datetime
 
 
 # Define the blueprint: 'track', set its url prefix: app.url/track
@@ -33,7 +34,12 @@ def get_track_info(res, track_id):
         'track_id' : track_id
     }
 
-    return res.send(track.get_track_info(params))
+    result = track.get_track_info(params)
+
+    if not result:
+        raise FailedRequest('Invalid track_id')
+
+    return res.send(result)
 
 
 @mod_track.route('/<track_id>', methods=['POST'])
@@ -43,16 +49,35 @@ def edit_track_info(res, track_id):
     if not utils.has_scopes(request.user_id, 'music.meta'):
         raise FailedRequest('You do not have permission to do this action')
 
-    params = utils.get_data(app.config['TRACKS_FIELDS'], {}, request.values)
+    fields = app.config['TRACKS_FIELDS']
+    fields.append('album_cover')
+
+    params = utils.get_data(fields, {}, request.values)
 
     if params['error']:
         raise FailedRequest(params['error'])
 
     params['track_id'] = track_id
 
+    album_cover = request.files.get('image')
+
+    if album_cover and track.is_image(album_cover.filename):
+        upload_params = {
+            'image'             : album_cover,
+            'image_filename'    : secure_filename(album_cover.filename)
+        }
+        params['album_cover'] = app.config['S3_URL'] + '/album_covers/' + upload_params['image_filename']
+
+        track.upload_album_cover(upload_params)
+
     track.edit_track_info(params)
 
-    return res.send(track.get_track_info(params))
+    result = track.get_track_info(params)
+
+    if not result:
+        raise FailedRequest('Invalid track_id')
+
+    return res.send(result)
 
 
 @mod_track.route('/<track_id>', methods=['DELETE'])
@@ -79,12 +104,12 @@ def delete_track(res, track_id):
 #         'track_id' : track_id
 #     }
 
-#     data = track.get_track_info(params)
+#     result = track.get_track_info(params)
 
-#     if not data:
-#         raise FailedRequest(params['error'])
+#     if not result:
+#         raise FailedRequest('Invalid track_id')
 
-#     return res.send('s3.amazonaws.com/music.tm/' + data[0]['filename'])
+#     return res.send('s3.amazonaws.com/music.tm/' + result[0]['filename'])
 
 
 @mod_track.route('/recommended', methods=['GET'])
@@ -106,7 +131,12 @@ def get_recommended_tracks(res):
         'instrument'    : data['instrument']
     }
 
-    return res.send(track.get_recommended_tracks(params))
+    result = track.get_recommended_tracks(params)
+
+    if not result:
+        raise FailedRequest('No results found')
+
+    return res.send(result)
 
 
 @mod_track.route('/search', methods=['GET'])
@@ -134,45 +164,69 @@ def get_uncategorized_tracks(res):
     if not utils.has_scopes(request.user_id, 'music.meta', 'music.list'):
         raise FailedRequest('You do not have permission to do this action')
 
-    return res.send(track.get_uncategorized_tracks())
+    result = track.get_uncategorized_tracks()
+
+    if not result:
+        raise FailedRequest('No results found')
+
+    return res.send(result)
 
 
 @mod_track.route('/upload', methods=['POST'])
 @check_tokens
 @make_response
 def upload_track(res):
-    if not utils.has_scopes(request.user_id, 'music.add'):
+    if not utils.has_scopes(request.user_id, 'music.add', 'music.meta'):
         raise FailedRequest('You do not have permission to do this action')
 
-    result = []
+    params = utils.get_data(app.config['TRACKS_FIELDS'], {}, request.values)
 
-    files = request.files.getlist('file[]')
+    if params['error']:
+            raise FailedRequest(params['error'])
 
-    for file in files:
-        filename = secure_filename(file.filename)
+    file = request.files.get('track')
 
-        params = {}
-        message = 'Uploading ' + filename
+    if not file:
+        raise FailedRequest('track is missing or no selected file')
 
-        if file and track.allowed_file(file.filename):
-            params = {
-                'track_id'  : utils.generate_UUID(),
-                'file'      : file,
-                'filename'  : filename
+    filename = secure_filename(file.filename)
+    s3_filename = track.generate_filename(filename)
+
+    if track.allowed_file(file.filename):
+        params['track_id'] = utils.generate_UUID()
+        params['album_cover'] = None
+        params['filename'] = filename
+        params['s3_filename'] = s3_filename
+        params['date_created'] = datetime.datetime.now()
+        params['track'] = file
+
+        album_cover = request.files.get('image')
+
+        if not album_cover:
+            params['message'] = 'No album cover'
+
+        elif track.is_image(album_cover.filename):
+            upload_params = {
+                'image'             : album_cover,
+                'image_filename'    : secure_filename(album_cover.filename)
             }
+            params['album_cover'] = app.config['S3_URL'] + '/album_covers/' + upload_params['image_filename']
 
-            track.upload_track(params)
-            track.add_track(params)
-
-            message += ' success'
+            track.upload_album_cover(upload_params)
 
         else:
-            message += ' failed'
+            params['message'] = 'Album cover not allowed'
 
-        params.pop('file', None)
-        params['message'] = message
+        # Disable upload to S3 for now
+        # TODO: Run upload in background
+        # track.upload_track(params)
 
-        result.append(params)
+        track.add_track(params)
 
-    return res.send(result)
+        params.pop('track', None)
+
+        return res.send(params)
+
+    else:
+        raise FailedRequest('File not allowed')
 

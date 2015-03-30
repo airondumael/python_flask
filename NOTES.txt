@@ -27,8 +27,6 @@ POST    /purchase/album/<id>
 
 
 
-
-
 # Database schema
 
 
@@ -58,3 +56,42 @@ artist_name
 # Pricing
 entity_id
 price
+
+
+
+# Implemented APIs
+
+
+GET /auth
+
+# API calls below requires mida and access_token
+GET /auth/logout
+
+GET /user
+POST /user
+'active', 'rank', 'genre', 'mood', 'instrument'
+
+DELETE /user/<user_id>
+
+POST /track/upload
+'track' - name of music track file to upload
+'title', 'artist', 'album', 'genre', 'mood', 'instrument', 'lyrics', 'country'
+'image' - name of image file to upload (optional)
+
+GET /track/<track_id>
+
+POST /track/<track_id> - edit track
+'title', 'artist', 'album', 'genre', 'mood', 'instrument', 'lyrics', 'country'
+'album_cover' - current album cover link, hidden input
+'image' - name of image file to upload (optional)
+
+DELETE /track/<track_id>
+GET /track/recommended
+GET /track/uncategorized
+GET /track/search/<query>
+
+POST /music-provider
+'name', 'description', 'owner_id', 'image', 'logo', 'banner', 'website', 'email', 'contact_numbers', 'url'
+
+# genre, mood, and instrument have comma-separated values
+

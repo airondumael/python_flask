@@ -40,7 +40,12 @@ def get_all_users(res):
     if not utils.has_scopes(request.user_id, 'user.view_all'):
         raise FailedRequest('You do not have permission to do this action')
 
-    return res.send(user.get_all_users())
+    result = user.get_all_users()
+
+    if not result:
+        raise FailedRequest('No results found')
+
+    return res.send(result)
 
 
 @mod_user.route('/', methods=['POST'])
