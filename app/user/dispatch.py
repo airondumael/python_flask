@@ -45,20 +45,20 @@ def get_user(res, user_id=None):
     return res.send(result[0])
 
 
+@mod_user.route('/all', methods=['GET'])
 @mod_user.route('/all/<page>', methods=['GET'])
 @check_tokens
 @make_response
-def get_all_users(res, page):
+def get_all_users(res, page=1):
     if not utils.has_scopes(request.user_id, 'user.view_all'):
         raise FailedRequest('You do not have permission to do this action')
 
-    params = utils.get_data(['entries'], [], request.values)
+    entries = request.args.get('entries')
 
-    if params['error']:
-        raise FailedRequest(params['error'])
-
-    params['page'] = int(page)
-    params['entries'] = int(params['entries'])
+    params = {
+        'page'      : int(page),
+        'entries'   : int(entries) if entries else 20
+    }
 
     result = user.get_all_users(params)
 
